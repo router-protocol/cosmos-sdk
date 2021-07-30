@@ -143,6 +143,9 @@ func SimulateMsgSubmitProposal(
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "unable to generate a submit proposal msg"), nil, err
 		}
+		if err := msg.ValidateBasic(); err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "generated invalid submit proposal msg"), nil, err
+		}
 
 		account := ak.GetAccount(ctx, simAccount.Address)
 		spendable := bk.SpendableCoins(ctx, account.GetAddress())
