@@ -87,7 +87,7 @@ func (m MsgSubmitProposal) Type() string { return TypeMsgSubmitProposal }
 // ValidateBasic implements Msg
 func (m MsgSubmitProposal) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(m.Proposer); err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, m.Proposer)
+		return sdkerrors.ErrInvalidAddress.Wrapf("invalid proposer address: %s", err)
 	}
 	if !m.InitialDeposit.IsValid() {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.InitialDeposit.String())
@@ -117,8 +117,9 @@ func (m MsgSubmitProposal) GetSignBytes() []byte {
 }
 
 // GetSigners implements Msg
-func (m MsgSubmitProposal) GetSigners() []string {
-	return []string{m.Proposer}
+func (m MsgSubmitProposal) GetSigners() []sdk.AccAddress {
+	proposer, _ := sdk.AccAddressFromBech32(m.Proposer)
+	return []sdk.AccAddress{proposer}
 }
 
 // String implements the Stringer interface
@@ -259,8 +260,8 @@ func (msg MsgDeposit) Type() string { return TypeMsgDeposit }
 
 // ValidateBasic implements Msg
 func (msg MsgDeposit) ValidateBasic() error {
-	if msg.Depositor == "" {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, msg.Depositor)
+	if _, err := sdk.AccAddressFromBech32(msg.Depositor); err != nil {
+		return sdkerrors.ErrInvalidAddress.Wrapf("invalid depositor address: %s", err)
 	}
 	if !msg.Amount.IsValid() {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, msg.Amount.String())
@@ -285,8 +286,9 @@ func (msg MsgDeposit) GetSignBytes() []byte {
 }
 
 // GetSigners implements Msg
-func (msg MsgDeposit) GetSigners() []string {
-	return []string{msg.Depositor}
+func (msg MsgDeposit) GetSigners() []sdk.AccAddress {
+	depositor, _ := sdk.AccAddressFromBech32(msg.Depositor)
+	return []sdk.AccAddress{depositor}
 }
 
 // NewMsgVote creates a message to cast a vote on an active proposal
@@ -303,10 +305,9 @@ func (msg MsgVote) Type() string { return TypeMsgVote }
 
 // ValidateBasic implements Msg
 func (msg MsgVote) ValidateBasic() error {
-	if msg.Voter == "" {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, msg.Voter)
+	if _, err := sdk.AccAddressFromBech32(msg.Voter); err != nil {
+		return sdkerrors.ErrInvalidAddress.Wrapf("invalid voter address: %s", err)
 	}
-
 	if !ValidVoteOption(msg.Option) {
 		return sdkerrors.Wrap(ErrInvalidVote, msg.Option.String())
 	}
@@ -327,8 +328,9 @@ func (msg MsgVote) GetSignBytes() []byte {
 }
 
 // GetSigners implements Msg
-func (msg MsgVote) GetSigners() []string {
-	return []string{msg.Voter}
+func (msg MsgVote) GetSigners() []sdk.AccAddress {
+	voter, _ := sdk.AccAddressFromBech32(msg.Voter)
+	return []sdk.AccAddress{voter}
 }
 
 // NewMsgVoteWeighted creates a message to cast a vote on an active proposal
@@ -345,10 +347,9 @@ func (msg MsgVoteWeighted) Type() string { return TypeMsgVoteWeighted }
 
 // ValidateBasic implements Msg
 func (msg MsgVoteWeighted) ValidateBasic() error {
-	if msg.Voter == "" {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, msg.Voter)
+	if _, err := sdk.AccAddressFromBech32(msg.Voter); err != nil {
+		return sdkerrors.ErrInvalidAddress.Wrapf("invalid voter address: %s", err)
 	}
-
 	if len(msg.Options) == 0 {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, WeightedVoteOptions(msg.Options).String())
 	}
@@ -390,6 +391,7 @@ func (msg MsgVoteWeighted) GetSignBytes() []byte {
 }
 
 // GetSigners implements Msg
-func (msg MsgVoteWeighted) GetSigners() []string {
-	return []string{msg.Voter}
+func (msg MsgVoteWeighted) GetSigners() []sdk.AccAddress {
+	voter, _ := sdk.AccAddressFromBech32(msg.Voter)
+	return []sdk.AccAddress{voter}
 }
