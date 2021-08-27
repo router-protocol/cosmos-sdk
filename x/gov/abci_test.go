@@ -36,7 +36,6 @@ func TestTickExpiredDepositPeriod(t *testing.T) {
 		types.ContentFromProposalType("test", "test", types.ProposalTypeText),
 		sdk.Coins{sdk.NewInt64Coin(sdk.DefaultBondDenom, 5)},
 		addrs[0],
-		[]sdk.Msg{},
 	)
 	require.NoError(t, err)
 
@@ -90,7 +89,6 @@ func TestTickMultipleExpiredDepositPeriod(t *testing.T) {
 		types.ContentFromProposalType("test", "test", types.ProposalTypeText),
 		sdk.Coins{sdk.NewInt64Coin(sdk.DefaultBondDenom, 5)},
 		addrs[0],
-		[]sdk.Msg{},
 	)
 	require.NoError(t, err)
 
@@ -114,7 +112,6 @@ func TestTickMultipleExpiredDepositPeriod(t *testing.T) {
 		types.ContentFromProposalType("test2", "test2", types.ProposalTypeText),
 		sdk.Coins{sdk.NewInt64Coin(sdk.DefaultBondDenom, 5)},
 		addrs[0],
-		[]sdk.Msg{},
 	)
 	require.NoError(t, err)
 
@@ -172,7 +169,6 @@ func TestTickPassedDepositPeriod(t *testing.T) {
 		types.ContentFromProposalType("test2", "test2", types.ProposalTypeText),
 		sdk.Coins{sdk.NewInt64Coin(sdk.DefaultBondDenom, 5)},
 		addrs[0],
-		[]sdk.Msg{},
 	)
 	require.NoError(t, err)
 
@@ -225,7 +221,7 @@ func TestTickPassedVotingPeriod(t *testing.T) {
 	activeQueue.Close()
 
 	proposalCoins := sdk.Coins{sdk.NewCoin(sdk.DefaultBondDenom, app.StakingKeeper.TokensFromConsensusPower(ctx, 5))}
-	newProposalMsg, err := types.NewMsgSubmitProposal(TestProposal, proposalCoins, addrs[0], []sdk.Msg{})
+	newProposalMsg, err := types.NewMsgSubmitProposal(TestProposal, proposalCoins, addrs[0])
 	require.NoError(t, err)
 
 	wrapCtx := sdk.WrapSDKContext(ctx)

@@ -26,6 +26,7 @@ const (
 	flagDepositor    = "depositor"
 	flagStatus       = "status"
 	FlagProposal     = "proposal"
+	FlagMessages     = "messages"
 )
 
 type proposal struct {
@@ -33,6 +34,11 @@ type proposal struct {
 	Description string
 	Type        string
 	Deposit     string
+}
+
+type proposal2 struct {
+	Messages string
+	Deposit  string
 }
 
 // ProposalFlags defines the core required fields of a proposal. It is used to
@@ -121,7 +127,7 @@ $ %s tx gov submit-proposal --title="Test Proposal" --description="My awesome pr
 
 			content := types.ContentFromProposalType(proposal.Title, proposal.Description, proposal.Type)
 
-			msg, err := types.NewMsgSubmitProposal(content, amount, clientCtx.GetFromAddress(), []sdk.Msg{})
+			msg, err := types.NewMsgSubmitProposal(content, amount, clientCtx.GetFromAddress())
 			if err != nil {
 				return fmt.Errorf("invalid message: %w", err)
 			}
@@ -134,6 +140,71 @@ $ %s tx gov submit-proposal --title="Test Proposal" --description="My awesome pr
 	cmd.Flags().String(FlagDescription, "", "The proposal description")
 	cmd.Flags().String(FlagProposalType, "", "The proposal Type")
 	cmd.Flags().String(FlagDeposit, "", "The proposal deposit")
+	cmd.Flags().String(FlagProposal, "", "Proposal file path (if this path is given, other proposal flags are ignored)")
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// NewCmdSubmitProposal2 implements submitting a proposal transaction command.
+func NewCmdSubmitProposal2() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "submit-proposal-2",
+		Short: "Submit a proposal along with an initial deposit",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Submit a proposal along with an initial deposit.
+Proposal messages and deposit can be given directly or through a proposal JSON file.
+
+Example:
+$ %s tx gov submit-proposal2 --proposal="path/to/proposal.json" --from mykey
+
+Where proposal.json contains:
+
+{
+  "msgs": [
+	  	{
+		 	"type":"cosmos-sdk/MsgVote",
+		  	"value":{
+			  "option":1,
+			  "proposal_id":"0",
+			  "voter":"cosmos1w3jhxap3gempvr"
+			}
+		}
+  ]
+  "deposit": "10test"
+}
+
+Which is equivalent to:
+
+$ %s tx gov submit-proposal2 \
+	--messages="[{"type":"cosmos-sdk/MsgVote","value":{"option":1,"proposal_id":"0","voter":"cosmos1w3jhxap3gempvr"}}]" \
+	--deposit="10test" \
+	--from mykey \
+`,
+				version.AppName, version.AppName,
+			),
+		),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			messages, deposit, err := parseProposalMessages(cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			msg, err := types.NewMsgSubmitProposal2(messages, deposit, clientCtx.GetFromAddress())
+			if err != nil {
+				return fmt.Errorf("invalid message: %w", err)
+			}
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	cmd.Flags().String(FlagMessages, "", "The proposal messages")
 	cmd.Flags().String(FlagProposal, "", "Proposal file path (if this path is given, other proposal flags are ignored)")
 	flags.AddTxFlagsToCmd(cmd)
 

@@ -379,6 +379,7 @@
     - [MsgDeposit](#cosmos.gov.v1beta1.MsgDeposit)
     - [MsgDepositResponse](#cosmos.gov.v1beta1.MsgDepositResponse)
     - [MsgSubmitProposal](#cosmos.gov.v1beta1.MsgSubmitProposal)
+    - [MsgSubmitProposal2](#cosmos.gov.v1beta1.MsgSubmitProposal2)
     - [MsgSubmitProposalResponse](#cosmos.gov.v1beta1.MsgSubmitProposalResponse)
     - [MsgVote](#cosmos.gov.v1beta1.MsgVote)
     - [MsgVoteResponse](#cosmos.gov.v1beta1.MsgVoteResponse)
@@ -5565,7 +5566,23 @@ proposal Content.
 | `content` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
 | `initial_deposit` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
 | `proposer` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="cosmos.gov.v1beta1.MsgSubmitProposal2"></a>
+
+### MsgSubmitProposal2
+MsgSubmitProposal defines an sdk.Msg type that supports submitting arbitrary SDK messages
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
 | `messages` | [google.protobuf.Any](#google.protobuf.Any) | repeated |  |
+| `initial_deposit` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
+| `proposer` | [string](#string) |  |  |
 
 
 
@@ -5655,6 +5672,7 @@ Msg defines the bank Msg service.
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `SubmitProposal` | [MsgSubmitProposal](#cosmos.gov.v1beta1.MsgSubmitProposal) | [MsgSubmitProposalResponse](#cosmos.gov.v1beta1.MsgSubmitProposalResponse) | SubmitProposal defines a method to create new proposal given a content. | |
+| `SubmitProposal2` | [MsgSubmitProposal2](#cosmos.gov.v1beta1.MsgSubmitProposal2) | [MsgSubmitProposalResponse](#cosmos.gov.v1beta1.MsgSubmitProposalResponse) |  | |
 | `Vote` | [MsgVote](#cosmos.gov.v1beta1.MsgVote) | [MsgVoteResponse](#cosmos.gov.v1beta1.MsgVoteResponse) | Vote defines a method to add a vote on a specific proposal. | |
 | `VoteWeighted` | [MsgVoteWeighted](#cosmos.gov.v1beta1.MsgVoteWeighted) | [MsgVoteWeightedResponse](#cosmos.gov.v1beta1.MsgVoteWeightedResponse) | VoteWeighted defines a method to add a weighted vote on a specific proposal. | |
 | `Deposit` | [MsgDeposit](#cosmos.gov.v1beta1.MsgDeposit) | [MsgDepositResponse](#cosmos.gov.v1beta1.MsgDepositResponse) | Deposit defines a method to add deposit on a specific proposal. | |

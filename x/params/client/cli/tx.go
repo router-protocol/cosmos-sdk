@@ -76,7 +76,7 @@ Where proposal.json contains:
 				return err
 			}
 
-			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from, []sdk.Msg{})
+			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {
 				return err
 			}

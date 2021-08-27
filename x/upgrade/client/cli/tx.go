@@ -57,7 +57,7 @@ func NewCmdSubmitUpgradeProposal() *cobra.Command {
 				return err
 			}
 
-			msg, err := gov.NewMsgSubmitProposal(content, deposit, from, []sdk.Msg{})
+			msg, err := gov.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {
 				return err
 			}
@@ -111,7 +111,7 @@ func NewCmdSubmitCancelUpgradeProposal() *cobra.Command {
 
 			content := types.NewCancelSoftwareUpgradeProposal(title, description)
 
-			msg, err := gov.NewMsgSubmitProposal(content, deposit, from, []sdk.Msg{})
+			msg, err := gov.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {
 				return err
 			}

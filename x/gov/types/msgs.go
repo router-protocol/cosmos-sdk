@@ -14,35 +14,22 @@ import (
 
 // Governance message types and routes
 const (
-	TypeMsgDeposit        = "deposit"
-	TypeMsgVote           = "vote"
-	TypeMsgVoteWeighted   = "weighted_vote"
-	TypeMsgSubmitProposal = "submit_proposal"
+	TypeMsgDeposit         = "deposit"
+	TypeMsgVote            = "vote"
+	TypeMsgVoteWeighted    = "weighted_vote"
+	TypeMsgSubmitProposal  = "submit_proposal"
+	TypeMsgSubmitProposal2 = "submit_proposal2"
 )
 
 var (
-	_, _, _, _ sdk.Msg                       = &MsgSubmitProposal{}, &MsgDeposit{}, &MsgVote{}, &MsgVoteWeighted{}
-	_          types.UnpackInterfacesMessage = &MsgSubmitProposal{}
+	_, _, _, _, _ sdk.Msg                       = &MsgSubmitProposal{}, &MsgDeposit{}, &MsgVote{}, &MsgVoteWeighted{}, &MsgSubmitProposal2{}
+	_, _          types.UnpackInterfacesMessage = &MsgSubmitProposal{}, &MsgSubmitProposal2{}
 )
 
 // NewMsgSubmitProposal creates a new MsgSubmitProposal.
 //nolint:interfacer
-func NewMsgSubmitProposal(content Content, initialDeposit sdk.Coins, proposer sdk.AccAddress, messages []sdk.Msg) (*MsgSubmitProposal, error) {
-	msgsAny := make([]*types.Any, len(messages))
-	for i, msg := range messages {
-		m, ok := msg.(proto.Message)
-		if !ok {
-			return nil, fmt.Errorf("can't proto marshal %T", msg)
-		}
-		any, err := types.NewAnyWithValue(m)
-		if err != nil {
-			return nil, err
-		}
-		msgsAny[i] = any
-	}
-
+func NewMsgSubmitProposal(content Content, initialDeposit sdk.Coins, proposer sdk.AccAddress) (*MsgSubmitProposal, error) {
 	m := &MsgSubmitProposal{
-		Messages:       msgsAny,
 		InitialDeposit: initialDeposit,
 		Proposer:       proposer.String(),
 	}
@@ -60,19 +47,6 @@ func (m *MsgSubmitProposal) GetInitialDeposit() sdk.Coins { return m.InitialDepo
 func (m *MsgSubmitProposal) GetProposer() sdk.AccAddress {
 	proposer, _ := sdk.AccAddressFromBech32(m.Proposer)
 	return proposer
-}
-
-func (m *MsgSubmitProposal) GetMessages() ([]sdk.Msg, error) {
-	msgs := make([]sdk.Msg, len(m.Messages))
-	for i, msgAny := range m.Messages {
-		msg, ok := msgAny.GetCachedValue().(sdk.Msg)
-		if !ok {
-			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "messages contains %T which is not a sdk.Msg", msgAny)
-		}
-		msgs[i] = msg
-	}
-
-	return msgs, nil
 }
 
 func (m *MsgSubmitProposal) GetContent() Content {
@@ -122,15 +96,6 @@ func (m MsgSubmitProposal) ValidateBasic() error {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.InitialDeposit.String())
 	}
 
-	// Empty messages are not allowed
-	if m.Messages == nil || len(m.Messages) == 0 {
-		return ErrNoProposalMsgs
-	}
-
-	if _, err := m.GetMessages(); err != nil {
-		return err
-	}
-
 	content := m.GetContent()
 	if content == nil {
 		return sdkerrors.Wrap(ErrInvalidProposalContent, "missing content")
@@ -164,6 +129,112 @@ func (m MsgSubmitProposal) String() string {
 
 // UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
 func (m MsgSubmitProposal) UnpackInterfaces(unpacker types.AnyUnpacker) error {
+	var content Content
+	return unpacker.UnpackAny(m.Content, &content)
+}
+
+// NewMsgSubmitProposal2 creates a new MsgSubmitProposal2.
+//nolint:interfacer
+func NewMsgSubmitProposal2(messages []sdk.Msg, initialDeposit sdk.Coins, proposer sdk.AccAddress) (*MsgSubmitProposal2, error) {
+	msgsAny := make([]*types.Any, len(messages))
+	for i, msg := range messages {
+		m, ok := msg.(proto.Message)
+		if !ok {
+			return nil, fmt.Errorf("can't proto marshal %T", msg)
+		}
+		any, err := types.NewAnyWithValue(m)
+		if err != nil {
+			return nil, err
+		}
+		msgsAny[i] = any
+	}
+
+	m := &MsgSubmitProposal2{
+		Messages:       msgsAny,
+		InitialDeposit: initialDeposit,
+		Proposer:       proposer.String(),
+	}
+
+	return m, nil
+}
+
+func (m *MsgSubmitProposal2) GetInitialDeposit() sdk.Coins { return m.InitialDeposit }
+
+func (m *MsgSubmitProposal2) GetProposer() sdk.AccAddress {
+	proposer, _ := sdk.AccAddressFromBech32(m.Proposer)
+	return proposer
+}
+
+func (m *MsgSubmitProposal2) GetMessages() ([]sdk.Msg, error) {
+	msgs := make([]sdk.Msg, len(m.Messages))
+	for i, msgAny := range m.Messages {
+		msg, ok := msgAny.GetCachedValue().(sdk.Msg)
+		if !ok {
+			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "messages contains %T which is not a sdk.Msg", msgAny)
+		}
+		msgs[i] = msg
+	}
+
+	return msgs, nil
+}
+
+func (m *MsgSubmitProposal2) SetInitialDeposit(coins sdk.Coins) {
+	m.InitialDeposit = coins
+}
+
+func (m *MsgSubmitProposal2) SetProposer(address fmt.Stringer) {
+	m.Proposer = address.String()
+}
+
+// Route implements Msg
+func (m MsgSubmitProposal2) Route() string { return RouterKey }
+
+// Type implements Msg
+func (m MsgSubmitProposal2) Type() string { return TypeMsgSubmitProposal2 }
+
+// ValidateBasic implements Msg
+func (m MsgSubmitProposal2) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(m.Proposer); err != nil {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, m.Proposer)
+	}
+	if !m.InitialDeposit.IsValid() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.InitialDeposit.String())
+	}
+	if m.InitialDeposit.IsAnyNegative() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.InitialDeposit.String())
+	}
+
+	// Empty messages are not allowed
+	if m.Messages == nil || len(m.Messages) == 0 {
+		return ErrNoProposalMsgs
+	}
+
+	if _, err := m.GetMessages(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GetSignBytes implements Msg
+func (m MsgSubmitProposal2) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(&m)
+	return sdk.MustSortJSON(bz)
+}
+
+// GetSigners implements Msg
+func (m MsgSubmitProposal2) GetSigners() []string {
+	return []string{m.Proposer}
+}
+
+// String implements the Stringer interface
+func (m MsgSubmitProposal2) String() string {
+	out, _ := yaml.Marshal(m)
+	return string(out)
+}
+
+// UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
+func (m MsgSubmitProposal2) UnpackInterfaces(unpacker types.AnyUnpacker) error {
 	var msg sdk.Msg
 	for _, m := range m.Messages {
 		err := unpacker.UnpackAny(m, &msg)
@@ -171,9 +242,7 @@ func (m MsgSubmitProposal) UnpackInterfaces(unpacker types.AnyUnpacker) error {
 			return err
 		}
 	}
-
-	var content Content
-	return unpacker.UnpackAny(m.Content, &content)
+	return nil
 }
 
 // NewMsgDeposit creates a new MsgDeposit instance

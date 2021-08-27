@@ -42,14 +42,11 @@ func TestMsgSubmitProposal(t *testing.T) {
 		{"Test Proposal", strings.Repeat("#", MaxDescriptionLength*2), ProposalTypeText, addrs[0], coinsMulti, false},
 	}
 
-	proposalMsgs := []sdk.Msg{NewMsgVote(addrs[0], 0, OptionYes)}
-
 	for i, tc := range tests {
 		msg, err := NewMsgSubmitProposal(
 			ContentFromProposalType(tc.title, tc.description, tc.proposalType),
 			tc.initialDeposit,
 			tc.proposerAddr,
-			proposalMsgs,
 		)
 
 		require.NoError(t, err)
@@ -60,6 +57,17 @@ func TestMsgSubmitProposal(t *testing.T) {
 			require.Error(t, msg.ValidateBasic(), "test: %v", i)
 		}
 	}
+}
+
+func TestMsgSubmitProposal2(t *testing.T) {
+	proposalMsgs := []sdk.Msg{NewMsgVote(addrs[0], 0, OptionYes)}
+	msg, err := NewMsgSubmitProposal2(proposalMsgs, coinsPos, addrs[0])
+	require.NoError(t, err)
+	require.NoError(t, msg.ValidateBasic())
+
+	msg, err = NewMsgSubmitProposal2([]sdk.Msg{}, coinsPos, addrs[0])
+	require.NoError(t, err)
+	require.Error(t, msg.ValidateBasic())
 }
 
 func TestMsgDepositGetSignBytes(t *testing.T) {
@@ -167,7 +175,7 @@ func TestMsgVoteWeighted(t *testing.T) {
 
 // this tests that Amino JSON MsgSubmitProposal.GetSignBytes() still works with Content as Any using the ModuleCdc
 func TestMsgSubmitProposal_GetSignBytes(t *testing.T) {
-	msg, err := NewMsgSubmitProposal(NewTextProposal("test", "abcd"), sdk.NewCoins(), sdk.AccAddress{}, []sdk.Msg{})
+	msg, err := NewMsgSubmitProposal(NewTextProposal("test", "abcd"), sdk.NewCoins(), sdk.AccAddress{})
 	require.NoError(t, err)
 	var bz []byte
 	require.NotPanics(t, func() {
@@ -175,5 +183,18 @@ func TestMsgSubmitProposal_GetSignBytes(t *testing.T) {
 	})
 	require.Equal(t,
 		`{"type":"cosmos-sdk/MsgSubmitProposal","value":{"content":{"type":"cosmos-sdk/TextProposal","value":{"description":"abcd","title":"test"}},"initial_deposit":[]}}`,
+		string(bz))
+}
+
+func TestMsgSubmitProposal2_GetSignBytes(t *testing.T) {
+	proposalMsgs := []sdk.Msg{NewMsgVote(addrs[0], 0, OptionYes)}
+	msg, err := NewMsgSubmitProposal2(proposalMsgs, sdk.NewCoins(), sdk.AccAddress{})
+	require.NoError(t, err)
+	var bz []byte
+	require.NotPanics(t, func() {
+		bz = msg.GetSignBytes()
+	})
+	require.Equal(t,
+		`{"initial_deposit":[],"messages":[{"type":"cosmos-sdk/MsgVote","value":{"option":1,"proposal_id":"0","voter":"cosmos1w3jhxap3gempvr"}}]}`,
 		string(bz))
 }
