@@ -224,8 +224,9 @@ func (m MsgSubmitProposal2) GetSignBytes() []byte {
 }
 
 // GetSigners implements Msg
-func (m MsgSubmitProposal2) GetSigners() []string {
-	return []string{m.Proposer}
+func (m MsgSubmitProposal2) GetSigners() []sdk.AccAddress {
+	proposer, _ := sdk.AccAddressFromBech32(m.Proposer)
+	return []sdk.AccAddress{proposer}
 }
 
 // String implements the Stringer interface

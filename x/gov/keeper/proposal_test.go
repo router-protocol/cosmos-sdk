@@ -47,17 +47,17 @@ func (suite *KeeperTestSuite) TestActivateVotingPeriod() {
 var _ sdk.Msg = &testProposalMsg{}
 
 type testProposalMsg struct {
-	signer string
+	signer sdk.AccAddress
 }
 
-func newTestProposalMsg(signer string) *testProposalMsg {
+func newTestProposalMsg(signer sdk.AccAddress) *testProposalMsg {
 	return &testProposalMsg{signer: signer}
 }
 
 func (msg *testProposalMsg) ValidateBasic() error { return nil }
 
-func (msg *testProposalMsg) GetSigners() []string {
-	return []string{msg.signer}
+func (msg *testProposalMsg) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{msg.signer}
 }
 
 func (msg *testProposalMsg) String() string { return "testProposalMsg" }
@@ -74,8 +74,8 @@ func (suite *KeeperTestSuite) TestSubmitProposal() {
 	govAccount := suite.app.GovKeeper.GetGovernanceAccount(suite.ctx)
 	// Proposal is for the gov module to vote on another proposal :)
 	voteProposal := []sdk.Msg{types.NewMsgVote(govAccount.GetAddress(), 0, types.OptionYes)}
-	invalidAddressProposal := []sdk.Msg{newTestProposalMsg("invalidAddrs")}
-	invalidRouteProposal := []sdk.Msg{newTestProposalMsg(govAccount.GetAddress().String())}
+	invalidAddressProposal := []sdk.Msg{newTestProposalMsg(suite.addrs[0])}
+	invalidRouteProposal := []sdk.Msg{newTestProposalMsg(govAccount.GetAddress())}
 
 	testCases := []struct {
 		content     types.Content

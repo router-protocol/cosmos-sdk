@@ -6,10 +6,10 @@ import (
 
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	"github.com/cosmos/cosmos-sdk/x/auth/middleware"
 	"github.com/cosmos/cosmos-sdk/x/gov/types"
 )
 
@@ -34,7 +34,7 @@ type Keeper struct {
 	cdc codec.BinaryCodec
 
 	// Proposal router
-	router *baseapp.MsgServiceRouter
+	router *middleware.MsgServiceRouter
 }
 
 // NewKeeper returns a governance keeper. It handles:
@@ -46,7 +46,7 @@ type Keeper struct {
 // CONTRACT: the parameter Subspace must have the param key table already initialized
 func NewKeeper(
 	cdc codec.BinaryCodec, key sdk.StoreKey, paramSpace types.ParamSubspace,
-	authKeeper types.AccountKeeper, bankKeeper types.BankKeeper, sk types.StakingKeeper, router *baseapp.MsgServiceRouter,
+	authKeeper types.AccountKeeper, bankKeeper types.BankKeeper, sk types.StakingKeeper, router *middleware.MsgServiceRouter,
 ) Keeper {
 
 	// ensure governance module account is set
@@ -82,7 +82,7 @@ func (keeper Keeper) Logger(ctx sdk.Context) log.Logger {
 }
 
 // Router returns the gov Keeper's Router
-func (keeper Keeper) Router() *baseapp.MsgServiceRouter {
+func (keeper Keeper) Router() *middleware.MsgServiceRouter {
 	return keeper.router
 }
 

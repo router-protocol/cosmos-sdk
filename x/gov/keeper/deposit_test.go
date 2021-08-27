@@ -102,7 +102,7 @@ func TestDeposits(t *testing.T) {
 	require.Equal(t, addr1Initial, app.BankKeeper.GetAllBalances(ctx, TestAddrs[1]))
 
 	// Test delete and burn deposits
-	proposal, err = app.GovKeeper.SubmitProposal(ctx, tp)
+	proposal, err = app.GovKeeper.SubmitProposal(ctx, tp, []sdk.Msg{})
 	require.NoError(t, err)
 	proposalID = proposal.ProposalId
 	_, err = app.GovKeeper.AddDeposit(ctx, proposalID, TestAddrs[0], fourStake)

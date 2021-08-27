@@ -24,8 +24,8 @@ func (keeper Keeper) SubmitProposal(
 			return types.Proposal{}, types.ErrInvalidSigner
 		}
 
-		if signers[0] != keeper.GetGovernanceAccount(ctx).GetAddress().String() {
-			return types.Proposal{}, sdkerrors.Wrap(types.ErrInvalidSigner, signers[0])
+		if !signers[0].Equals(keeper.GetGovernanceAccount(ctx).GetAddress()) {
+			return types.Proposal{}, sdkerrors.Wrap(types.ErrInvalidSigner, signers[0].String())
 		}
 
 		if keeper.router.Handler(msg) == nil {
