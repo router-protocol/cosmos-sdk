@@ -350,6 +350,7 @@
     - [Deposit](#cosmos.gov.v1beta1.Deposit)
     - [DepositParams](#cosmos.gov.v1beta1.DepositParams)
     - [Proposal](#cosmos.gov.v1beta1.Proposal)
+    - [Proposal2](#cosmos.gov.v1beta1.Proposal2)
     - [TallyParams](#cosmos.gov.v1beta1.TallyParams)
     - [TallyResult](#cosmos.gov.v1beta1.TallyResult)
     - [TextProposal](#cosmos.gov.v1beta1.TextProposal)
@@ -5170,6 +5171,30 @@ Proposal defines the core field members of a governance proposal.
 | ----- | ---- | ----- | ----------- |
 | `proposal_id` | [uint64](#uint64) |  |  |
 | `content` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+| `status` | [ProposalStatus](#cosmos.gov.v1beta1.ProposalStatus) |  |  |
+| `final_tally_result` | [TallyResult](#cosmos.gov.v1beta1.TallyResult) |  |  |
+| `submit_time` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| `deposit_end_time` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| `total_deposit` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
+| `voting_start_time` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| `voting_end_time` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| `messages` | [google.protobuf.Any](#google.protobuf.Any) | repeated |  |
+
+
+
+
+
+
+<a name="cosmos.gov.v1beta1.Proposal2"></a>
+
+### Proposal2
+Proposal2 defines the core field members of a governance proposal.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `proposal_id` | [uint64](#uint64) |  |  |
+| `content` | [google.protobuf.Any](#google.protobuf.Any) |  | **Deprecated.**  |
 | `status` | [ProposalStatus](#cosmos.gov.v1beta1.ProposalStatus) |  |  |
 | `final_tally_result` | [TallyResult](#cosmos.gov.v1beta1.TallyResult) |  |  |
 | `submit_time` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |

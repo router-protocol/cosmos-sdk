@@ -41,7 +41,7 @@ func (keeper Keeper) SubmitProposal(
 	submitTime := ctx.BlockHeader().Time
 	depositPeriod := keeper.GetDepositParams(ctx).MaxDepositPeriod
 
-	proposal, err := types.NewProposal(content, messages, proposalID, submitTime, submitTime.Add(depositPeriod))
+	proposal, err := types.NewProposal(content, proposalID, submitTime, submitTime.Add(depositPeriod))
 	if err != nil {
 		return types.Proposal{}, err
 	}

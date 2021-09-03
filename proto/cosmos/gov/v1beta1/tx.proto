@@ -13,7 +13,7 @@ option go_package = "github.com/cosmos/cosmos-sdk/x/gov/types";
 service Msg {
   // SubmitProposal defines a method to create new proposal given a content.
   rpc SubmitProposal(MsgSubmitProposal) returns (MsgSubmitProposalResponse);
-  rpc SubmitProposal2(MsgSubmitProposal2) returns (MsgSubmitProposalResponse);
+  rpc SubmitProposalV2(MsgSubmitProposal2) returns (MsgSubmitProposalResponse);
 
   // Vote defines a method to add a vote on a specific proposal.
   rpc Vote(MsgVote) returns (MsgVoteResponse);
@@ -43,13 +43,13 @@ message MsgSubmitProposal {
 }
 
 // MsgSubmitProposal defines an sdk.Msg type that supports submitting arbitrary SDK messages
-message MsgSubmitProposal2 {
+message MsgSubmitProposalV2 {
   option (gogoproto.equal)            = false;
   option (gogoproto.goproto_stringer) = false;
   option (gogoproto.stringer)         = false;
   option (gogoproto.goproto_getters)  = false;
 
-  repeated google.protobuf.Any messages = 1;
+  repeated google.protobuf.Any messages             = 1;
   repeated cosmos.base.v1beta1.Coin initial_deposit = 2 [
     (gogoproto.nullable)     = false,
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",

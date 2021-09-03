@@ -15,9 +15,17 @@ service Query {
     option (google.api.http).get = "/cosmos/gov/v1beta1/proposals/{proposal_id}";
   }
 
+  rpc Proposal2(QueryProposalRequest) returns (QueryProposalResponse2) {
+    option (google.api.http).get = "/cosmos/gov/v1beta1/proposals/v2/{proposal_id}";
+  }
+
   // Proposals queries all proposals based on given status.
   rpc Proposals(QueryProposalsRequest) returns (QueryProposalsResponse) {
     option (google.api.http).get = "/cosmos/gov/v1beta1/proposals";
+  }
+
+  rpc Proposals2(QueryProposalsRequest) returns (QueryProposalsResponse2) {
+    option (google.api.http).get = "/cosmos/gov/v1beta1/proposals/v2/";
   }
 
   // Vote queries voted information based on proposalID, voterAddr.
@@ -62,6 +70,11 @@ message QueryProposalResponse {
   Proposal proposal = 1 [(gogoproto.nullable) = false];
 }
 
+// QueryProposalResponse2 is the response type for the Query/Proposal RPC method.
+message QueryProposalResponse2 {
+  ProposalV2 proposal = 1 [(gogoproto.nullable) = false];
+}
+
 // QueryProposalsRequest is the request type for the Query/Proposals RPC method.
 message QueryProposalsRequest {
   option (gogoproto.equal)           = false;
@@ -84,6 +97,15 @@ message QueryProposalsRequest {
 // method.
 message QueryProposalsResponse {
   repeated Proposal proposals = 1 [(gogoproto.nullable) = false];
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryProposalsResponse2 is the response type for the Query/Proposals RPC
+// method.
+message QueryProposalsResponse2 {
+  repeated ProposalV2 proposals = 1 [(gogoproto.nullable) = false];
 
   // pagination defines the pagination in the response.
   cosmos.base.query.v1beta1.PageResponse pagination = 2;

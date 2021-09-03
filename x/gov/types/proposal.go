@@ -19,6 +19,102 @@ const DefaultStartingProposalID uint64 = 1
 // NewProposal creates a new Proposal instance
 func NewProposal(
 	content Content,
+	id uint64,
+	submitTime, depositEndTime time.Time,
+) (Proposal, error) {
+
+	msg, ok := content.(proto.Message)
+	if !ok {
+		return Proposal{}, fmt.Errorf("%T does not implement proto.Message", content)
+	}
+
+	any, err := types.NewAnyWithValue(msg)
+	if err != nil {
+		return Proposal{}, err
+	}
+
+	p := Proposal{
+		ProposalId:       id,
+		Content:          any,
+		Status:           StatusDepositPeriod,
+		FinalTallyResult: EmptyTallyResult(),
+		TotalDeposit:     sdk.NewCoins(),
+		SubmitTime:       submitTime,
+		DepositEndTime:   depositEndTime,
+	}
+
+	return p, nil
+}
+
+// String implements stringer interface
+func (p Proposal) String() string {
+	out, _ := yaml.Marshal(p)
+	return string(out)
+}
+
+// GetContent returns the proposal Content
+func (p Proposal) GetContent() Content {
+	content, ok := p.Content.GetCachedValue().(Content)
+	if !ok {
+		return nil
+	}
+	return content
+}
+
+func (p Proposal) ProposalType() string {
+	content := p.GetContent()
+	if content == nil {
+		return ""
+	}
+	return content.ProposalType()
+}
+
+func (p Proposal) ProposalRoute() string {
+	content := p.GetContent()
+	if content == nil {
+		return ""
+	}
+	return content.ProposalRoute()
+}
+
+func (p Proposal) GetTitle() string {
+	content := p.GetContent()
+	if content == nil {
+		return ""
+	}
+	return content.GetTitle()
+}
+
+func (p Proposal) GetMessages() ([]sdk.Msg, error) {
+	msgs := make([]sdk.Msg, len(p.Messages))
+	for i, msgAny := range p.Messages {
+		msg, ok := msgAny.GetCachedValue().(sdk.Msg)
+		if !ok {
+			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "messages contains %T which is not a sdk.MsgRequest", msgAny)
+		}
+		msgs[i] = msg
+	}
+
+	return msgs, nil
+}
+
+// UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
+func (p Proposal) UnpackInterfaces(unpacker types.AnyUnpacker) error {
+	var msg sdk.Msg
+	for _, m := range p.Messages {
+		err := unpacker.UnpackAny(m, &msg)
+		if err != nil {
+			return err
+		}
+	}
+
+	var content Content
+	return unpacker.UnpackAny(p.Content, &content)
+}
+
+// NewProposalV2 creates a new Proposal2 instance
+func NewProposalV2(
+	content Content,
 	messages []sdk.Msg,
 	id uint64,
 	submitTime, depositEndTime time.Time,
