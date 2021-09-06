@@ -92,7 +92,7 @@ func parseProposalMessages(fs *pflag.FlagSet) ([]sdk.Msg, sdk.Coins, error) {
 		return []sdk.Msg{}, nil, err
 	}
 
-	json.Unmarshal([]byte(messagesString), msgs)
+	json.Unmarshal([]byte(messagesString), &msgs)
 
 	return msgs, deposit, nil
 }

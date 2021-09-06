@@ -86,7 +86,7 @@ func local_request_Query_Proposal_0(ctx context.Context, marshaler runtime.Marsh
 }
 
 func request_Query_ProposalV2_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryProposalRequest
+	var protoReq QueryProposalV2Request
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -113,7 +113,7 @@ func request_Query_ProposalV2_0(ctx context.Context, marshaler runtime.Marshaler
 }
 
 func local_request_Query_ProposalV2_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryProposalRequest
+	var protoReq QueryProposalV2Request
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -180,7 +180,7 @@ var (
 )
 
 func request_Query_ProposalsV2_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryProposalsRequest
+	var protoReq QueryProposalsV2Request
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {
@@ -196,7 +196,7 @@ func request_Query_ProposalsV2_0(ctx context.Context, marshaler runtime.Marshale
 }
 
 func local_request_Query_ProposalsV2_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryProposalsRequest
+	var protoReq QueryProposalsV2Request
 	var metadata runtime.ServerMetadata
 
 	if err := req.ParseForm(); err != nil {

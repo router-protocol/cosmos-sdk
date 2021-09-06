@@ -373,10 +373,12 @@
     - [QueryParamsResponse](#cosmos.gov.v1beta1.QueryParamsResponse)
     - [QueryProposalRequest](#cosmos.gov.v1beta1.QueryProposalRequest)
     - [QueryProposalResponse](#cosmos.gov.v1beta1.QueryProposalResponse)
-    - [QueryProposalResponseV2](#cosmos.gov.v1beta1.QueryProposalResponseV2)
+    - [QueryProposalV2Request](#cosmos.gov.v1beta1.QueryProposalV2Request)
+    - [QueryProposalV2Response](#cosmos.gov.v1beta1.QueryProposalV2Response)
     - [QueryProposalsRequest](#cosmos.gov.v1beta1.QueryProposalsRequest)
     - [QueryProposalsResponse](#cosmos.gov.v1beta1.QueryProposalsResponse)
-    - [QueryProposalsResponseV2](#cosmos.gov.v1beta1.QueryProposalsResponseV2)
+    - [QueryProposalsV2Request](#cosmos.gov.v1beta1.QueryProposalsV2Request)
+    - [QueryProposalsV2Response](#cosmos.gov.v1beta1.QueryProposalsV2Response)
     - [QueryTallyResultRequest](#cosmos.gov.v1beta1.QueryTallyResultRequest)
     - [QueryTallyResultResponse](#cosmos.gov.v1beta1.QueryTallyResultResponse)
     - [QueryVoteRequest](#cosmos.gov.v1beta1.QueryVoteRequest)
@@ -392,6 +394,7 @@
     - [MsgSubmitProposal](#cosmos.gov.v1beta1.MsgSubmitProposal)
     - [MsgSubmitProposalResponse](#cosmos.gov.v1beta1.MsgSubmitProposalResponse)
     - [MsgSubmitProposalV2](#cosmos.gov.v1beta1.MsgSubmitProposalV2)
+    - [MsgSubmitProposalV2Response](#cosmos.gov.v1beta1.MsgSubmitProposalV2Response)
     - [MsgVote](#cosmos.gov.v1beta1.MsgVote)
     - [MsgVoteResponse](#cosmos.gov.v1beta1.MsgVoteResponse)
     - [MsgVoteWeighted](#cosmos.gov.v1beta1.MsgVoteWeighted)
@@ -5410,7 +5413,7 @@ GenesisState defines the gov module's genesis state.
 | `deposit_params` | [DepositParams](#cosmos.gov.v1beta1.DepositParams) |  | params defines all the paramaters of related to deposit. |
 | `voting_params` | [VotingParams](#cosmos.gov.v1beta1.VotingParams) |  | params defines all the paramaters of related to voting. |
 | `tally_params` | [TallyParams](#cosmos.gov.v1beta1.TallyParams) |  | params defines all the paramaters of related to tally. |
-| `proposalsV2` | [ProposalV2](#cosmos.gov.v1beta1.ProposalV2) | repeated | proposalsV2 defines all the V2 proposals present at genesis. |
+| `proposals_v2` | [ProposalV2](#cosmos.gov.v1beta1.ProposalV2) | repeated | proposalsV2 defines all the V2 proposals present at genesis. |
 
 
 
@@ -5558,10 +5561,25 @@ QueryProposalResponse is the response type for the Query/Proposal RPC method.
 
 
 
-<a name="cosmos.gov.v1beta1.QueryProposalResponseV2"></a>
+<a name="cosmos.gov.v1beta1.QueryProposalV2Request"></a>
 
-### QueryProposalResponseV2
-QueryProposalResponse2 is the response type for the Query/Proposal RPC method.
+### QueryProposalV2Request
+QueryProposalV2Request is the request type for the Query/ProposalV2 RPC method.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `proposal_id` | [uint64](#uint64) |  | proposal_id defines the unique id of the proposal. |
+
+
+
+
+
+
+<a name="cosmos.gov.v1beta1.QueryProposalV2Response"></a>
+
+### QueryProposalV2Response
+QueryProposalV2Response is the response type for the Query/ProposalV2 RPC method.
 
 
 | Field | Type | Label | Description |
@@ -5608,10 +5626,28 @@ method.
 
 
 
-<a name="cosmos.gov.v1beta1.QueryProposalsResponseV2"></a>
+<a name="cosmos.gov.v1beta1.QueryProposalsV2Request"></a>
 
-### QueryProposalsResponseV2
-QueryProposalsResponse2 is the response type for the Query/Proposals RPC
+### QueryProposalsV2Request
+QueryProposalsV2Request is the request type for the Query/ProposalsV2 RPC method.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `proposal_status` | [ProposalStatus](#cosmos.gov.v1beta1.ProposalStatus) |  | proposal_status defines the status of the proposals. |
+| `voter` | [string](#string) |  | voter defines the voter address for the proposals. |
+| `depositor` | [string](#string) |  | depositor defines the deposit addresses from the proposals. |
+| `pagination` | [cosmos.base.query.v1beta1.PageRequest](#cosmos.base.query.v1beta1.PageRequest) |  | pagination defines an optional pagination for the request. |
+
+
+
+
+
+
+<a name="cosmos.gov.v1beta1.QueryProposalsV2Response"></a>
+
+### QueryProposalsV2Response
+QueryProposalsV2Response is the response type for the Query/ProposalsV2 RPC
 method.
 
 
@@ -5732,9 +5768,9 @@ Query defines the gRPC querier service for gov module
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `Proposal` | [QueryProposalRequest](#cosmos.gov.v1beta1.QueryProposalRequest) | [QueryProposalResponse](#cosmos.gov.v1beta1.QueryProposalResponse) | Proposal queries proposal details based on ProposalID. | GET|/cosmos/gov/v1beta1/proposals/{proposal_id}|
-| `ProposalV2` | [QueryProposalRequest](#cosmos.gov.v1beta1.QueryProposalRequest) | [QueryProposalResponseV2](#cosmos.gov.v1beta1.QueryProposalResponseV2) |  | GET|/cosmos/gov/v1beta1/proposalsV2/{proposal_id}|
+| `ProposalV2` | [QueryProposalV2Request](#cosmos.gov.v1beta1.QueryProposalV2Request) | [QueryProposalV2Response](#cosmos.gov.v1beta1.QueryProposalV2Response) | ProposalV2 queries V2 proposal details based on ProposalID. | GET|/cosmos/gov/v1beta1/proposalsV2/{proposal_id}|
 | `Proposals` | [QueryProposalsRequest](#cosmos.gov.v1beta1.QueryProposalsRequest) | [QueryProposalsResponse](#cosmos.gov.v1beta1.QueryProposalsResponse) | Proposals queries all proposals based on given status. | GET|/cosmos/gov/v1beta1/proposals|
-| `ProposalsV2` | [QueryProposalsRequest](#cosmos.gov.v1beta1.QueryProposalsRequest) | [QueryProposalsResponseV2](#cosmos.gov.v1beta1.QueryProposalsResponseV2) |  | GET|/cosmos/gov/v1beta1/proposalsV2|
+| `ProposalsV2` | [QueryProposalsV2Request](#cosmos.gov.v1beta1.QueryProposalsV2Request) | [QueryProposalsV2Response](#cosmos.gov.v1beta1.QueryProposalsV2Response) | ProposalsV2 queries all V2 proposals based on given status. | GET|/cosmos/gov/v1beta1/proposalsV2|
 | `Vote` | [QueryVoteRequest](#cosmos.gov.v1beta1.QueryVoteRequest) | [QueryVoteResponse](#cosmos.gov.v1beta1.QueryVoteResponse) | Vote queries voted information based on proposalID, voterAddr. | GET|/cosmos/gov/v1beta1/proposals/{proposal_id}/votes/{voter}|
 | `Votes` | [QueryVotesRequest](#cosmos.gov.v1beta1.QueryVotesRequest) | [QueryVotesResponse](#cosmos.gov.v1beta1.QueryVotesResponse) | Votes queries votes of a given proposal. | GET|/cosmos/gov/v1beta1/proposals/{proposal_id}/votes|
 | `Params` | [QueryParamsRequest](#cosmos.gov.v1beta1.QueryParamsRequest) | [QueryParamsResponse](#cosmos.gov.v1beta1.QueryParamsResponse) | Params queries all parameters of the gov module. | GET|/cosmos/gov/v1beta1/params/{params_type}|
@@ -5816,7 +5852,7 @@ MsgSubmitProposalResponse defines the Msg/SubmitProposal response type.
 <a name="cosmos.gov.v1beta1.MsgSubmitProposalV2"></a>
 
 ### MsgSubmitProposalV2
-MsgSubmitProposal defines an sdk.Msg type that supports submitting arbitrary SDK messages
+MsgSubmitProposalV2 defines an sdk.Msg type that supports submitting arbitrary SDK messages
 
 
 | Field | Type | Label | Description |
@@ -5824,6 +5860,21 @@ MsgSubmitProposal defines an sdk.Msg type that supports submitting arbitrary SDK
 | `messages` | [google.protobuf.Any](#google.protobuf.Any) | repeated |  |
 | `initial_deposit` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
 | `proposer` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="cosmos.gov.v1beta1.MsgSubmitProposalV2Response"></a>
+
+### MsgSubmitProposalV2Response
+MsgSubmitProposalResponseV2 defines the Msg/SubmitProposalV2 response type.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `proposal_id` | [uint64](#uint64) |  |  |
 
 
 
@@ -5898,7 +5949,7 @@ Msg defines the bank Msg service.
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `SubmitProposal` | [MsgSubmitProposal](#cosmos.gov.v1beta1.MsgSubmitProposal) | [MsgSubmitProposalResponse](#cosmos.gov.v1beta1.MsgSubmitProposalResponse) | SubmitProposal defines a method to create new proposal given a content. | |
-| `SubmitProposalV2` | [MsgSubmitProposalV2](#cosmos.gov.v1beta1.MsgSubmitProposalV2) | [MsgSubmitProposalResponse](#cosmos.gov.v1beta1.MsgSubmitProposalResponse) |  | |
+| `SubmitProposalV2` | [MsgSubmitProposalV2](#cosmos.gov.v1beta1.MsgSubmitProposalV2) | [MsgSubmitProposalV2Response](#cosmos.gov.v1beta1.MsgSubmitProposalV2Response) | SubmitProposalV2 defines a method to create new proposal given an array of messages. | |
 | `Vote` | [MsgVote](#cosmos.gov.v1beta1.MsgVote) | [MsgVoteResponse](#cosmos.gov.v1beta1.MsgVoteResponse) | Vote defines a method to add a vote on a specific proposal. | |
 | `VoteWeighted` | [MsgVoteWeighted](#cosmos.gov.v1beta1.MsgVoteWeighted) | [MsgVoteWeightedResponse](#cosmos.gov.v1beta1.MsgVoteWeightedResponse) | VoteWeighted defines a method to add a weighted vote on a specific proposal. | |
 | `Deposit` | [MsgDeposit](#cosmos.gov.v1beta1.MsgDeposit) | [MsgDepositResponse](#cosmos.gov.v1beta1.MsgDepositResponse) | Deposit defines a method to add deposit on a specific proposal. | |

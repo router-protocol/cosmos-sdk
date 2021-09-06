@@ -61,7 +61,7 @@ func (k msgServer) SubmitProposal(goCtx context.Context, msg *types.MsgSubmitPro
 	}, nil
 }
 
-func (k msgServer) SubmitProposalV2(goCtx context.Context, msg *types.MsgSubmitProposalV2) (*types.MsgSubmitProposalResponse, error) {
+func (k msgServer) SubmitProposalV2(goCtx context.Context, msg *types.MsgSubmitProposalV2) (*types.MsgSubmitProposalV2Response, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	msgs, err := msg.GetMessages()
@@ -97,7 +97,7 @@ func (k msgServer) SubmitProposalV2(goCtx context.Context, msg *types.MsgSubmitP
 	}
 
 	ctx.EventManager().EmitEvent(submitEvent)
-	return &types.MsgSubmitProposalResponse{
+	return &types.MsgSubmitProposalV2Response{
 		ProposalId: proposal.ProposalId,
 	}, nil
 }

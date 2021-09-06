@@ -72,14 +72,13 @@ $ %s query gov proposal 1
 				return fmt.Errorf("proposal-id %s not a valid uint, please input a valid proposal-id", args[0])
 			}
 
-			req := &types.QueryProposalRequest{ProposalId: proposalID}
-
 			// Query the proposal
-			res, err := queryClient.Proposal(cmd.Context(), req)
+			res, err := queryClient.Proposal(cmd.Context(), &types.QueryProposalRequest{ProposalId: proposalID})
 			if err != nil {
 				// Check if the proposal is V2
 				if errors.Is(err, types.ErrUnknownProposal) {
-					res2, err := queryClient.ProposalV2(cmd.Context(), req)
+					res2, err := queryClient.ProposalV2(cmd.Context(),
+						&types.QueryProposalV2Request{ProposalId: proposalID})
 					if err != nil {
 						return err
 					}

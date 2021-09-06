@@ -13,7 +13,9 @@ option go_package = "github.com/cosmos/cosmos-sdk/x/gov/types";
 service Msg {
   // SubmitProposal defines a method to create new proposal given a content.
   rpc SubmitProposal(MsgSubmitProposal) returns (MsgSubmitProposalResponse);
-  rpc SubmitProposalV2(MsgSubmitProposalV2) returns (MsgSubmitProposalResponse);
+
+  // SubmitProposalV2 defines a method to create new proposal given an array of messages.
+  rpc SubmitProposalV2(MsgSubmitProposalV2) returns (MsgSubmitProposalV2Response);
 
   // Vote defines a method to add a vote on a specific proposal.
   rpc Vote(MsgVote) returns (MsgVoteResponse);
@@ -42,7 +44,12 @@ message MsgSubmitProposal {
   string proposer = 3;
 }
 
-// MsgSubmitProposal defines an sdk.Msg type that supports submitting arbitrary SDK messages
+// MsgSubmitProposalResponse defines the Msg/SubmitProposal response type.
+message MsgSubmitProposalResponse {
+  uint64 proposal_id = 1 [(gogoproto.jsontag) = "proposal_id", (gogoproto.moretags) = "yaml:\"proposal_id\""];
+}
+
+// MsgSubmitProposalV2 defines an sdk.Msg type that supports submitting arbitrary SDK messages
 message MsgSubmitProposalV2 {
   option (gogoproto.equal)            = false;
   option (gogoproto.goproto_stringer) = false;
@@ -58,8 +65,8 @@ message MsgSubmitProposalV2 {
   string proposer = 3;
 }
 
-// MsgSubmitProposalResponse defines the Msg/SubmitProposal response type.
-message MsgSubmitProposalResponse {
+// MsgSubmitProposalResponseV2 defines the Msg/SubmitProposalV2 response type.
+message MsgSubmitProposalV2Response {
   uint64 proposal_id = 1 [(gogoproto.jsontag) = "proposal_id", (gogoproto.moretags) = "yaml:\"proposal_id\""];
 }
 

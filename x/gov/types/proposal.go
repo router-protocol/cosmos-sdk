@@ -16,8 +16,8 @@ import (
 // DefaultStartingProposalID is 1
 const (
 	DefaultStartingProposalID uint64 = 1
-	Version1                         = 1
-	Version2                         = 2
+	Version1                  int    = 1
+	Version2                  int    = 2
 )
 
 // NewProposal creates a new Proposal instance

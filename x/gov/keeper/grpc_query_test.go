@@ -88,7 +88,7 @@ func (suite *KeeperTestSuite) TestGRPCQueryProposalV2() {
 		suite.Require().NoError(err)
 		suite.Require().NotEmpty(submittedProposal)
 
-		req := &types.QueryProposalRequest{}
+		req := &types.QueryProposalV2Request{}
 		proposalRes, err := queryClient.ProposalV2(gocontext.Background(), req)
 		suite.Require().NoError(err)
 		suite.Require().Equal(submittedProposal, proposalRes.Proposal)
