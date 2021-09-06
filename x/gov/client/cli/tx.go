@@ -195,7 +195,7 @@ $ %s tx gov submit-proposal2 \
 				return err
 			}
 
-			msg, err := types.NewMsgSubmitProposal2(messages, deposit, clientCtx.GetFromAddress())
+			msg, err := types.NewMsgSubmitProposalV2(messages, deposit, clientCtx.GetFromAddress())
 			if err != nil {
 				return fmt.Errorf("invalid message: %w", err)
 			}

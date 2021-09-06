@@ -134,9 +134,9 @@ func (m MsgSubmitProposal) UnpackInterfaces(unpacker types.AnyUnpacker) error {
 	return unpacker.UnpackAny(m.Content, &content)
 }
 
-// NewMsgSubmitProposal2 creates a new MsgSubmitProposal2.
+// NewMsgSubmitProposalV2 creates a new MsgSubmitProposalV2.
 //nolint:interfacer
-func NewMsgSubmitProposal2(messages []sdk.Msg, initialDeposit sdk.Coins, proposer sdk.AccAddress) (*MsgSubmitProposalV2, error) {
+func NewMsgSubmitProposalV2(messages []sdk.Msg, initialDeposit sdk.Coins, proposer sdk.AccAddress) (*MsgSubmitProposalV2, error) {
 	msgsAny := make([]*types.Any, len(messages))
 	for i, msg := range messages {
 		m, ok := msg.(proto.Message)

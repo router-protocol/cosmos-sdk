@@ -9,6 +9,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/gov/types"
 )
 
 func TestDeposits(t *testing.T) {
@@ -110,5 +111,42 @@ func TestDeposits(t *testing.T) {
 	app.GovKeeper.DeleteAndBurnDeposits(ctx, proposalID)
 	deposits = app.GovKeeper.GetDeposits(ctx, proposalID)
 	require.Len(t, deposits, 0)
+	require.Equal(t, addr0Initial.Sub(fourStake), app.BankKeeper.GetAllBalances(ctx, TestAddrs[0]))
+}
+
+func TestDepositsV2(t *testing.T) {
+	app := simapp.Setup(t, false)
+	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
+
+	TestAddrs := simapp.AddTestAddrsIncremental(app, ctx, 2, sdk.NewInt(10000000))
+
+	govAccount := app.GovKeeper.GetGovernanceAccount(ctx)
+	msgs := []sdk.Msg{types.NewMsgVote(govAccount.GetAddress(), 0, types.OptionYes)}
+	proposal, err := app.GovKeeper.SubmitProposalV2(ctx, msgs)
+	require.NoError(t, err)
+	proposalID := proposal.ProposalId
+
+	fourStake := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, app.StakingKeeper.TokensFromConsensusPower(ctx, 4)))
+	addr0Initial := app.BankKeeper.GetAllBalances(ctx, TestAddrs[0])
+	require.True(t, proposal.TotalDeposit.IsEqual(sdk.NewCoins()))
+
+	// Check no deposits at beginning
+	deposit, found := app.GovKeeper.GetDeposit(ctx, proposalID, TestAddrs[1])
+	require.False(t, found)
+	proposal, ok := app.GovKeeper.GetProposalV2(ctx, proposalID)
+	require.True(t, ok)
+	require.True(t, proposal.VotingStartTime.Equal(time.Time{}))
+
+	// Check first deposit
+	votingStarted, err := app.GovKeeper.AddDepositV2(ctx, proposalID, TestAddrs[0], fourStake)
+	require.NoError(t, err)
+	require.False(t, votingStarted)
+	deposit, found = app.GovKeeper.GetDeposit(ctx, proposalID, TestAddrs[0])
+	require.True(t, found)
+	require.Equal(t, fourStake, deposit.Amount)
+	require.Equal(t, TestAddrs[0].String(), deposit.Depositor)
+	proposal, ok = app.GovKeeper.GetProposalV2(ctx, proposalID)
+	require.True(t, ok)
+	require.Equal(t, fourStake, proposal.TotalDeposit)
 	require.Equal(t, addr0Initial.Sub(fourStake), app.BankKeeper.GetAllBalances(ctx, TestAddrs[0]))
 }

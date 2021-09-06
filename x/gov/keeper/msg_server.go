@@ -115,7 +115,7 @@ func (k msgServer) Vote(goCtx context.Context, msg *types.MsgVote) (*types.MsgVo
 	case types.Version1:
 		err = k.Keeper.AddVote(ctx, msg.ProposalId, accAddr, types.NewNonSplitVoteOption(msg.Option))
 	case types.Version2:
-		err = k.Keeper.AddVote2(ctx, msg.ProposalId, accAddr, types.NewNonSplitVoteOption(msg.Option))
+		err = k.Keeper.AddVoteV2(ctx, msg.ProposalId, accAddr, types.NewNonSplitVoteOption(msg.Option))
 	default:
 		err = sdkerrors.Wrapf(types.ErrUnknownProposal, "%d", msg.ProposalId)
 	}

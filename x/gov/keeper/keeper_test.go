@@ -40,12 +40,15 @@ func TestIncrementProposalNumber(t *testing.T) {
 	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
+	govAccount := app.GovKeeper.GetGovernanceAccount(ctx)
+	proposalMsgs := []sdk.Msg{types.NewMsgVote(govAccount.GetAddress(), 0, types.OptionYes)}
+
 	tp := TestProposal
 	_, err := app.GovKeeper.SubmitProposal(ctx, tp)
 	require.NoError(t, err)
 	_, err = app.GovKeeper.SubmitProposal(ctx, tp)
 	require.NoError(t, err)
-	_, err = app.GovKeeper.SubmitProposal(ctx, tp)
+	_, err = app.GovKeeper.SubmitProposalV2(ctx, proposalMsgs)
 	require.NoError(t, err)
 	_, err = app.GovKeeper.SubmitProposal(ctx, tp)
 	require.NoError(t, err)
@@ -83,6 +86,40 @@ func TestProposalQueues(t *testing.T) {
 
 	proposalID, _ = types.SplitActiveProposalQueueKey(activeIterator.Key())
 	require.Equal(t, proposalID, proposal.ProposalId)
+
+	activeIterator.Close()
+}
+
+func TestProposalQueuesV2(t *testing.T) {
+	app := simapp.Setup(t, false)
+	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
+
+	govAccount := app.GovKeeper.GetGovernanceAccount(ctx)
+	proposalMsgs := []sdk.Msg{types.NewMsgVote(govAccount.GetAddress(), 0, types.OptionYes)}
+
+	// create test proposal
+	proposal, err := app.GovKeeper.SubmitProposalV2(ctx, proposalMsgs)
+	require.NoError(t, err)
+
+	inactiveIterator := app.GovKeeper.InactiveProposalQueueIterator(ctx, proposal.DepositEndTime)
+	require.True(t, inactiveIterator.Valid())
+
+	proposalID := types.GetProposalIDFromBytes(inactiveIterator.Value())
+	require.Equal(t, proposalID, proposal.ProposalId)
+	inactiveIterator.Close()
+
+	app.GovKeeper.ActivateVotingPeriodV2(ctx, proposal)
+
+	receivedProposal, ok := app.GovKeeper.GetProposalV2(ctx, proposal.ProposalId)
+	require.True(t, ok)
+	require.Equal(t, proposal.ProposalId, receivedProposal.ProposalId)
+	require.Equal(t, types.StatusVotingPeriod, receivedProposal.Status)
+
+	activeIterator := app.GovKeeper.ActiveProposalQueueIterator(ctx, receivedProposal.VotingEndTime)
+	require.True(t, activeIterator.Valid())
+
+	proposalID, _ = types.SplitActiveProposalQueueKey(activeIterator.Key())
+	require.Equal(t, proposalID, receivedProposal.ProposalId)
 
 	activeIterator.Close()
 }

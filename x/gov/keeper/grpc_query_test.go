@@ -77,6 +77,24 @@ func (suite *KeeperTestSuite) TestGRPCQueryProposal() {
 	}
 }
 
+func (suite *KeeperTestSuite) TestGRPCQueryProposalV2() {
+	app, ctx, queryClient := suite.app, suite.ctx, suite.queryClient
+
+	suite.Run("Query V2 Proposal", func() {
+		govAccount := app.GovKeeper.GetGovernanceAccount(ctx)
+		proposalMsgs := []sdk.Msg{types.NewMsgVote(govAccount.GetAddress(), 0, types.OptionYes)}
+
+		submittedProposal, err := app.GovKeeper.SubmitProposalV2(ctx, proposalMsgs)
+		suite.Require().NoError(err)
+		suite.Require().NotEmpty(submittedProposal)
+
+		req := &types.QueryProposalRequest{}
+		proposalRes, err := queryClient.ProposalV2(gocontext.Background(), req)
+		suite.Require().NoError(err)
+		suite.Require().Equal(submittedProposal, proposalRes.Proposal)
+	})
+}
+
 func (suite *KeeperTestSuite) TestGRPCQueryProposals() {
 	app, ctx, queryClient, addrs := suite.app, suite.ctx, suite.queryClient, suite.addrs
 
