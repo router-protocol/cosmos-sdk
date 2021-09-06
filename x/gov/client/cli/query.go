@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -71,12 +72,19 @@ $ %s query gov proposal 1
 				return fmt.Errorf("proposal-id %s not a valid uint, please input a valid proposal-id", args[0])
 			}
 
+			req := &types.QueryProposalRequest{ProposalId: proposalID}
+
 			// Query the proposal
-			res, err := queryClient.Proposal(
-				cmd.Context(),
-				&types.QueryProposalRequest{ProposalId: proposalID},
-			)
+			res, err := queryClient.Proposal(cmd.Context(), req)
 			if err != nil {
+				// Check if the proposal is V2
+				if errors.Is(err, types.ErrUnknownProposal) {
+					res2, err := queryClient.ProposalV2(cmd.Context(), req)
+					if err != nil {
+						return err
+					}
+					return clientCtx.PrintProto(&res2.Proposal)
+				}
 				return err
 			}
 

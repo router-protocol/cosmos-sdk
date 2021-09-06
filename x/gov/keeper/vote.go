@@ -41,6 +41,39 @@ func (keeper Keeper) AddVote(ctx sdk.Context, proposalID uint64, voterAddr sdk.A
 	return nil
 }
 
+// AddVoteV2 adds a vote on a specific V2 proposal
+func (keeper Keeper) AddVote2(ctx sdk.Context, proposalID uint64, voterAddr sdk.AccAddress, options types.WeightedVoteOptions) error {
+	proposal, ok := keeper.GetProposalV2(ctx, proposalID)
+	if !ok {
+		return sdkerrors.Wrapf(types.ErrUnknownProposal, "%d", proposalID)
+	}
+	if proposal.Status != types.StatusVotingPeriod {
+		return sdkerrors.Wrapf(types.ErrInactiveProposal, "%d", proposalID)
+	}
+
+	for _, option := range options {
+		if !types.ValidWeightedVoteOption(option) {
+			return sdkerrors.Wrap(types.ErrInvalidVote, option.String())
+		}
+	}
+
+	vote := types.NewVote(proposalID, voterAddr, options)
+	keeper.SetVote(ctx, vote)
+
+	// called after a vote on a proposal is cast
+	keeper.AfterProposalVote(ctx, proposalID, voterAddr)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeProposalVote,
+			sdk.NewAttribute(types.AttributeKeyOption, options.String()),
+			sdk.NewAttribute(types.AttributeKeyProposalID, fmt.Sprintf("%d", proposalID)),
+		),
+	)
+
+	return nil
+}
+
 // GetAllVotes returns all the votes from the store
 func (keeper Keeper) GetAllVotes(ctx sdk.Context) (votes types.Votes) {
 	keeper.IterateAllVotes(ctx, func(vote types.Vote) bool {

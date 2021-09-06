@@ -34,7 +34,8 @@ func (data GenesisState) Equal(other GenesisState) bool {
 		data.Proposals.Equal(other.Proposals) &&
 		data.DepositParams.Equal(other.DepositParams) &&
 		data.TallyParams.Equal(other.TallyParams) &&
-		data.VotingParams.Equal(other.VotingParams)
+		data.VotingParams.Equal(other.VotingParams) &&
+		data.ProposalsV2.Equal(other.ProposalsV2)
 }
 
 // Empty returns true if a GenesisState is empty

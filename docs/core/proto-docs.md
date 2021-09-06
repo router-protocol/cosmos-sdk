@@ -350,7 +350,7 @@
     - [Deposit](#cosmos.gov.v1beta1.Deposit)
     - [DepositParams](#cosmos.gov.v1beta1.DepositParams)
     - [Proposal](#cosmos.gov.v1beta1.Proposal)
-    - [Proposal2](#cosmos.gov.v1beta1.Proposal2)
+    - [ProposalV2](#cosmos.gov.v1beta1.ProposalV2)
     - [TallyParams](#cosmos.gov.v1beta1.TallyParams)
     - [TallyResult](#cosmos.gov.v1beta1.TallyResult)
     - [TextProposal](#cosmos.gov.v1beta1.TextProposal)
@@ -373,8 +373,10 @@
     - [QueryParamsResponse](#cosmos.gov.v1beta1.QueryParamsResponse)
     - [QueryProposalRequest](#cosmos.gov.v1beta1.QueryProposalRequest)
     - [QueryProposalResponse](#cosmos.gov.v1beta1.QueryProposalResponse)
+    - [QueryProposalResponseV2](#cosmos.gov.v1beta1.QueryProposalResponseV2)
     - [QueryProposalsRequest](#cosmos.gov.v1beta1.QueryProposalsRequest)
     - [QueryProposalsResponse](#cosmos.gov.v1beta1.QueryProposalsResponse)
+    - [QueryProposalsResponseV2](#cosmos.gov.v1beta1.QueryProposalsResponseV2)
     - [QueryTallyResultRequest](#cosmos.gov.v1beta1.QueryTallyResultRequest)
     - [QueryTallyResultResponse](#cosmos.gov.v1beta1.QueryTallyResultResponse)
     - [QueryVoteRequest](#cosmos.gov.v1beta1.QueryVoteRequest)
@@ -388,8 +390,8 @@
     - [MsgDeposit](#cosmos.gov.v1beta1.MsgDeposit)
     - [MsgDepositResponse](#cosmos.gov.v1beta1.MsgDepositResponse)
     - [MsgSubmitProposal](#cosmos.gov.v1beta1.MsgSubmitProposal)
-    - [MsgSubmitProposal2](#cosmos.gov.v1beta1.MsgSubmitProposal2)
     - [MsgSubmitProposalResponse](#cosmos.gov.v1beta1.MsgSubmitProposalResponse)
+    - [MsgSubmitProposalV2](#cosmos.gov.v1beta1.MsgSubmitProposalV2)
     - [MsgVote](#cosmos.gov.v1beta1.MsgVote)
     - [MsgVoteResponse](#cosmos.gov.v1beta1.MsgVoteResponse)
     - [MsgVoteWeighted](#cosmos.gov.v1beta1.MsgVoteWeighted)
@@ -3191,7 +3193,7 @@ GetNodeInfoRequest is the request type for the Query/GetNodeInfo RPC method.
 <a name="cosmos.base.tendermint.v1beta1.GetNodeInfoResponse"></a>
 
 ### GetNodeInfoResponse
-GetNodeInfoResponse is the request type for the Query/GetNodeInfo RPC method.
+GetNodeInfoResponse is the response type for the Query/GetNodeInfo RPC method.
 
 
 | Field | Type | Label | Description |
@@ -5215,23 +5217,21 @@ Proposal defines the core field members of a governance proposal.
 | `total_deposit` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
 | `voting_start_time` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
 | `voting_end_time` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
-| `messages` | [google.protobuf.Any](#google.protobuf.Any) | repeated |  |
 
 
 
 
 
 
-<a name="cosmos.gov.v1beta1.Proposal2"></a>
+<a name="cosmos.gov.v1beta1.ProposalV2"></a>
 
-### Proposal2
+### ProposalV2
 Proposal2 defines the core field members of a governance proposal.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `proposal_id` | [uint64](#uint64) |  |  |
-| `content` | [google.protobuf.Any](#google.protobuf.Any) |  | **Deprecated.**  |
 | `status` | [ProposalStatus](#cosmos.gov.v1beta1.ProposalStatus) |  |  |
 | `final_tally_result` | [TallyResult](#cosmos.gov.v1beta1.TallyResult) |  |  |
 | `submit_time` | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
@@ -5410,6 +5410,7 @@ GenesisState defines the gov module's genesis state.
 | `deposit_params` | [DepositParams](#cosmos.gov.v1beta1.DepositParams) |  | params defines all the paramaters of related to deposit. |
 | `voting_params` | [VotingParams](#cosmos.gov.v1beta1.VotingParams) |  | params defines all the paramaters of related to voting. |
 | `tally_params` | [TallyParams](#cosmos.gov.v1beta1.TallyParams) |  | params defines all the paramaters of related to tally. |
+| `proposalsV2` | [ProposalV2](#cosmos.gov.v1beta1.ProposalV2) | repeated | proposalsV2 defines all the V2 proposals present at genesis. |
 
 
 
@@ -5557,6 +5558,21 @@ QueryProposalResponse is the response type for the Query/Proposal RPC method.
 
 
 
+<a name="cosmos.gov.v1beta1.QueryProposalResponseV2"></a>
+
+### QueryProposalResponseV2
+QueryProposalResponse2 is the response type for the Query/Proposal RPC method.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `proposal` | [ProposalV2](#cosmos.gov.v1beta1.ProposalV2) |  |  |
+
+
+
+
+
+
 <a name="cosmos.gov.v1beta1.QueryProposalsRequest"></a>
 
 ### QueryProposalsRequest
@@ -5585,6 +5601,23 @@ method.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `proposals` | [Proposal](#cosmos.gov.v1beta1.Proposal) | repeated |  |
+| `pagination` | [cosmos.base.query.v1beta1.PageResponse](#cosmos.base.query.v1beta1.PageResponse) |  | pagination defines the pagination in the response. |
+
+
+
+
+
+
+<a name="cosmos.gov.v1beta1.QueryProposalsResponseV2"></a>
+
+### QueryProposalsResponseV2
+QueryProposalsResponse2 is the response type for the Query/Proposals RPC
+method.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `proposals` | [ProposalV2](#cosmos.gov.v1beta1.ProposalV2) | repeated |  |
 | `pagination` | [cosmos.base.query.v1beta1.PageResponse](#cosmos.base.query.v1beta1.PageResponse) |  | pagination defines the pagination in the response. |
 
 
@@ -5699,7 +5732,9 @@ Query defines the gRPC querier service for gov module
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `Proposal` | [QueryProposalRequest](#cosmos.gov.v1beta1.QueryProposalRequest) | [QueryProposalResponse](#cosmos.gov.v1beta1.QueryProposalResponse) | Proposal queries proposal details based on ProposalID. | GET|/cosmos/gov/v1beta1/proposals/{proposal_id}|
+| `ProposalV2` | [QueryProposalRequest](#cosmos.gov.v1beta1.QueryProposalRequest) | [QueryProposalResponseV2](#cosmos.gov.v1beta1.QueryProposalResponseV2) |  | GET|/cosmos/gov/v1beta1/proposalsV2/{proposal_id}|
 | `Proposals` | [QueryProposalsRequest](#cosmos.gov.v1beta1.QueryProposalsRequest) | [QueryProposalsResponse](#cosmos.gov.v1beta1.QueryProposalsResponse) | Proposals queries all proposals based on given status. | GET|/cosmos/gov/v1beta1/proposals|
+| `ProposalsV2` | [QueryProposalsRequest](#cosmos.gov.v1beta1.QueryProposalsRequest) | [QueryProposalsResponseV2](#cosmos.gov.v1beta1.QueryProposalsResponseV2) |  | GET|/cosmos/gov/v1beta1/proposalsV2|
 | `Vote` | [QueryVoteRequest](#cosmos.gov.v1beta1.QueryVoteRequest) | [QueryVoteResponse](#cosmos.gov.v1beta1.QueryVoteResponse) | Vote queries voted information based on proposalID, voterAddr. | GET|/cosmos/gov/v1beta1/proposals/{proposal_id}/votes/{voter}|
 | `Votes` | [QueryVotesRequest](#cosmos.gov.v1beta1.QueryVotesRequest) | [QueryVotesResponse](#cosmos.gov.v1beta1.QueryVotesResponse) | Votes queries votes of a given proposal. | GET|/cosmos/gov/v1beta1/proposals/{proposal_id}/votes|
 | `Params` | [QueryParamsRequest](#cosmos.gov.v1beta1.QueryParamsRequest) | [QueryParamsResponse](#cosmos.gov.v1beta1.QueryParamsResponse) | Params queries all parameters of the gov module. | GET|/cosmos/gov/v1beta1/params/{params_type}|
@@ -5763,23 +5798,6 @@ proposal Content.
 
 
 
-<a name="cosmos.gov.v1beta1.MsgSubmitProposal2"></a>
-
-### MsgSubmitProposal2
-MsgSubmitProposal defines an sdk.Msg type that supports submitting arbitrary SDK messages
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `messages` | [google.protobuf.Any](#google.protobuf.Any) | repeated |  |
-| `initial_deposit` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
-| `proposer` | [string](#string) |  |  |
-
-
-
-
-
-
 <a name="cosmos.gov.v1beta1.MsgSubmitProposalResponse"></a>
 
 ### MsgSubmitProposalResponse
@@ -5789,6 +5807,23 @@ MsgSubmitProposalResponse defines the Msg/SubmitProposal response type.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `proposal_id` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="cosmos.gov.v1beta1.MsgSubmitProposalV2"></a>
+
+### MsgSubmitProposalV2
+MsgSubmitProposal defines an sdk.Msg type that supports submitting arbitrary SDK messages
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `messages` | [google.protobuf.Any](#google.protobuf.Any) | repeated |  |
+| `initial_deposit` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) | repeated |  |
+| `proposer` | [string](#string) |  |  |
 
 
 
@@ -5863,7 +5898,7 @@ Msg defines the bank Msg service.
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `SubmitProposal` | [MsgSubmitProposal](#cosmos.gov.v1beta1.MsgSubmitProposal) | [MsgSubmitProposalResponse](#cosmos.gov.v1beta1.MsgSubmitProposalResponse) | SubmitProposal defines a method to create new proposal given a content. | |
-| `SubmitProposal2` | [MsgSubmitProposal2](#cosmos.gov.v1beta1.MsgSubmitProposal2) | [MsgSubmitProposalResponse](#cosmos.gov.v1beta1.MsgSubmitProposalResponse) |  | |
+| `SubmitProposalV2` | [MsgSubmitProposalV2](#cosmos.gov.v1beta1.MsgSubmitProposalV2) | [MsgSubmitProposalResponse](#cosmos.gov.v1beta1.MsgSubmitProposalResponse) |  | |
 | `Vote` | [MsgVote](#cosmos.gov.v1beta1.MsgVote) | [MsgVoteResponse](#cosmos.gov.v1beta1.MsgVoteResponse) | Vote defines a method to add a vote on a specific proposal. | |
 | `VoteWeighted` | [MsgVoteWeighted](#cosmos.gov.v1beta1.MsgVoteWeighted) | [MsgVoteWeightedResponse](#cosmos.gov.v1beta1.MsgVoteWeightedResponse) | VoteWeighted defines a method to add a weighted vote on a specific proposal. | |
 | `Deposit` | [MsgDeposit](#cosmos.gov.v1beta1.MsgDeposit) | [MsgDepositResponse](#cosmos.gov.v1beta1.MsgDepositResponse) | Deposit defines a method to add deposit on a specific proposal. | |
@@ -7135,11 +7170,12 @@ Class defines the class of the nft type.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `id` | [string](#string) |  |  |
-| `name` | [string](#string) |  |  |
-| `symbol` | [string](#string) |  |  |
-| `description` | [string](#string) |  |  |
-| `uri` | [string](#string) |  |  |
+| `id` | [string](#string) |  | id defines the unique identifier of the NFT classification, similar to the contract address of ERC721 |
+| `name` | [string](#string) |  | name defines the human-readable name of the NFT classification |
+| `symbol` | [string](#string) |  | symbol is an abbreviated name for nft classification |
+| `description` | [string](#string) |  | description is a brief description of nft classification |
+| `uri` | [string](#string) |  | uri is a URI may point to a JSON file that conforms to the nft classification Metadata JSON Schema. |
+| `uri_hash` | [string](#string) |  | uri_hash is a hash of the document pointed to uri |
 
 
 
@@ -7149,15 +7185,16 @@ Class defines the class of the nft type.
 <a name="cosmos.nft.v1beta1.NFT"></a>
 
 ### NFT
-NFT defines the nft.
+NFT defines the NFT.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `class_id` | [string](#string) |  |  |
-| `id` | [string](#string) |  |  |
-| `uri` | [string](#string) |  |  |
-| `data` | [google.protobuf.Any](#google.protobuf.Any) |  |  |
+| `class_id` | [string](#string) |  | class_id defines the unique identifier of the NFT classification, similar to the contract address of ERC721 |
+| `id` | [string](#string) |  | id defines the unique identification of NFT |
+| `uri` | [string](#string) |  | uri defines NFT's metadata storage address outside the chain |
+| `uri_hash` | [string](#string) |  | uri_hash is a hash of the document pointed to uri |
+| `data` | [google.protobuf.Any](#google.protobuf.Any) |  | data is the metadata of the NFT |
 
 
 
@@ -7188,8 +7225,8 @@ Entry Defines all nft owned by a person
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `owner` | [string](#string) |  |  |
-| `nfts` | [NFT](#cosmos.nft.v1beta1.NFT) | repeated |  |
+| `owner` | [string](#string) |  | owner is the owner address of the following nft |
+| `nfts` | [NFT](#cosmos.nft.v1beta1.NFT) | repeated | nfts is a group of nfts of the same owner |
 
 
 
@@ -7460,7 +7497,7 @@ Query defines the gRPC querier service.
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `Balance` | [QueryBalanceRequest](#cosmos.nft.v1beta1.QueryBalanceRequest) | [QueryBalanceResponse](#cosmos.nft.v1beta1.QueryBalanceResponse) | Balance queries the number of NFTs of a given class owned by the owner, same as balanceOf in ERC721 | GET|/cosmos/nft/v1beta1/balance/{class_id}/{owner}|
 | `Owner` | [QueryOwnerRequest](#cosmos.nft.v1beta1.QueryOwnerRequest) | [QueryOwnerResponse](#cosmos.nft.v1beta1.QueryOwnerResponse) | Owner queries the owner of the NFT based on its class and id, same as ownerOf in ERC721 | GET|/cosmos/nft/v1beta1/owner/{class_id}/{id}|
-| `Supply` | [QuerySupplyRequest](#cosmos.nft.v1beta1.QuerySupplyRequest) | [QuerySupplyResponse](#cosmos.nft.v1beta1.QuerySupplyResponse) | Supply queries the number of nft based on the class, same as totalSupply of ERC721 | GET|/cosmos/nft/v1beta1/supply/{class_id}|
+| `Supply` | [QuerySupplyRequest](#cosmos.nft.v1beta1.QuerySupplyRequest) | [QuerySupplyResponse](#cosmos.nft.v1beta1.QuerySupplyResponse) | Supply queries the number of NFTs from the given class, same as totalSupply of ERC721. | GET|/cosmos/nft/v1beta1/supply/{class_id}|
 | `NFTsOfClass` | [QueryNFTsOfClassRequest](#cosmos.nft.v1beta1.QueryNFTsOfClassRequest) | [QueryNFTsOfClassResponse](#cosmos.nft.v1beta1.QueryNFTsOfClassResponse) | NFTsOfClass queries all NFTs of a given class or optional owner, similar to tokenByIndex in ERC721Enumerable | GET|/cosmos/nft/v1beta1/nfts/{class_id}|
 | `NFT` | [QueryNFTRequest](#cosmos.nft.v1beta1.QueryNFTRequest) | [QueryNFTResponse](#cosmos.nft.v1beta1.QueryNFTResponse) | NFT queries an NFT based on its class and id. | GET|/cosmos/nft/v1beta1/nfts/{class_id}/{id}|
 | `Class` | [QueryClassRequest](#cosmos.nft.v1beta1.QueryClassRequest) | [QueryClassResponse](#cosmos.nft.v1beta1.QueryClassResponse) | Class queries an NFT class based on its id | GET|/cosmos/nft/v1beta1/classes/{class_id}|
@@ -7485,10 +7522,10 @@ MsgSend represents a message to send a nft from one account to another account.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `class_id` | [string](#string) |  |  |
-| `id` | [string](#string) |  |  |
-| `sender` | [string](#string) |  |  |
-| `receiver` | [string](#string) |  |  |
+| `class_id` | [string](#string) |  | class_id defines the unique identifier of the nft classification, similar to the contract address of ERC721 |
+| `id` | [string](#string) |  | id defines the unique identification of nft |
+| `sender` | [string](#string) |  | sender is the address of the owner of nft |
+| `receiver` | [string](#string) |  | receiver is the receiver address of nft |
 
 
 

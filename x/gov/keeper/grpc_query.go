@@ -272,8 +272,88 @@ func (q Keeper) TallyResult(c context.Context, req *types.QueryTallyResultReques
 
 	default:
 		// proposal is in voting period
-		_, _, tallyResult = q.Tally(ctx, proposal)
+		_, _, tallyResult = q.Tally(ctx, proposal.ProposalId)
 	}
 
 	return &types.QueryTallyResultResponse{Tally: tallyResult}, nil
+}
+
+// V2 Proposals
+
+// Proposal returns proposal details based on ProposalID
+func (q Keeper) ProposalV2(c context.Context, req *types.QueryProposalRequest) (*types.QueryProposalResponseV2, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	if req.ProposalId == 0 {
+		return nil, status.Error(codes.InvalidArgument, "proposal id can not be 0")
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+
+	proposal, found := q.GetProposalV2(ctx, req.ProposalId)
+	if !found {
+		return nil, status.Errorf(codes.NotFound, "proposal %d doesn't exist", req.ProposalId)
+	}
+
+	return &types.QueryProposalResponseV2{Proposal: proposal}, nil
+}
+
+// Proposals implements the Query/Proposals gRPC method
+func (q Keeper) ProposalsV2(c context.Context, req *types.QueryProposalsRequest) (*types.QueryProposalsResponseV2, error) {
+	var filteredProposals types.ProposalsV2
+	ctx := sdk.UnwrapSDKContext(c)
+
+	store := ctx.KVStore(q.storeKey)
+	proposalStore := prefix.NewStore(store, types.ProposalsKeyPrefixV2)
+
+	pageRes, err := query.FilteredPaginate(proposalStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
+		var p types.ProposalV2
+		if err := q.cdc.Unmarshal(value, &p); err != nil {
+			return false, status.Error(codes.Internal, err.Error())
+		}
+
+		matchVoter, matchDepositor, matchStatus := true, true, true
+
+		// match status (if supplied/valid)
+		if types.ValidProposalStatus(req.ProposalStatus) {
+			matchStatus = p.Status == req.ProposalStatus
+		}
+
+		// match voter address (if supplied)
+		if len(req.Voter) > 0 {
+			voter, err := sdk.AccAddressFromBech32(req.Voter)
+			if err != nil {
+				return false, err
+			}
+
+			_, matchVoter = q.GetVote(ctx, p.ProposalId, voter)
+		}
+
+		// match depositor (if supplied)
+		if len(req.Depositor) > 0 {
+			depositor, err := sdk.AccAddressFromBech32(req.Depositor)
+			if err != nil {
+				return false, err
+			}
+			_, matchDepositor = q.GetDeposit(ctx, p.ProposalId, depositor)
+		}
+
+		if matchVoter && matchDepositor && matchStatus {
+			if accumulate {
+				filteredProposals = append(filteredProposals, p)
+			}
+
+			return true, nil
+		}
+
+		return false, nil
+	})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryProposalsResponseV2{Proposals: filteredProposals, Pagination: pageRes}, nil
 }

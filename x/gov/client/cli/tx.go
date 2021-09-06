@@ -146,10 +146,10 @@ $ %s tx gov submit-proposal --title="Test Proposal" --description="My awesome pr
 	return cmd
 }
 
-// NewCmdSubmitProposal2 implements submitting a proposal transaction command.
-func NewCmdSubmitProposal2() *cobra.Command {
+// NewCmdSubmitProposalV2 implements submitting a proposal transaction command.
+func NewCmdSubmitProposalV2() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "submit-proposal-2",
+		Use:   "submit-proposalV2",
 		Short: "Submit a proposal along with an initial deposit",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a proposal along with an initial deposit.

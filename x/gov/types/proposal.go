@@ -14,15 +14,14 @@ import (
 )
 
 // DefaultStartingProposalID is 1
-const DefaultStartingProposalID uint64 = 1
+const (
+	DefaultStartingProposalID uint64 = 1
+	Version1                         = 1
+	Version2                         = 2
+)
 
 // NewProposal creates a new Proposal instance
-func NewProposal(
-	content Content,
-	id uint64,
-	submitTime, depositEndTime time.Time,
-) (Proposal, error) {
-
+func NewProposal(content Content, id uint64, submitTime, depositEndTime time.Time) (Proposal, error) {
 	msg, ok := content.(proto.Message)
 	if !ok {
 		return Proposal{}, fmt.Errorf("%T does not implement proto.Message", content)
@@ -34,8 +33,8 @@ func NewProposal(
 	}
 
 	p := Proposal{
-		ProposalId:       id,
 		Content:          any,
+		ProposalId:       id,
 		Status:           StatusDepositPeriod,
 		FinalTallyResult: EmptyTallyResult(),
 		TotalDeposit:     sdk.NewCoins(),
@@ -85,119 +84,53 @@ func (p Proposal) GetTitle() string {
 	return content.GetTitle()
 }
 
-func (p Proposal) GetMessages() ([]sdk.Msg, error) {
-	msgs := make([]sdk.Msg, len(p.Messages))
-	for i, msgAny := range p.Messages {
-		msg, ok := msgAny.GetCachedValue().(sdk.Msg)
-		if !ok {
-			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "messages contains %T which is not a sdk.MsgRequest", msgAny)
-		}
-		msgs[i] = msg
-	}
-
-	return msgs, nil
-}
-
 // UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
 func (p Proposal) UnpackInterfaces(unpacker types.AnyUnpacker) error {
-	var msg sdk.Msg
-	for _, m := range p.Messages {
-		err := unpacker.UnpackAny(m, &msg)
-		if err != nil {
-			return err
-		}
-	}
-
 	var content Content
 	return unpacker.UnpackAny(p.Content, &content)
 }
 
 // NewProposalV2 creates a new Proposal2 instance
 func NewProposalV2(
-	content Content,
 	messages []sdk.Msg,
 	id uint64,
 	submitTime, depositEndTime time.Time,
-) (Proposal, error) {
+) (ProposalV2, error) {
 
-	msgsAny := make([]*types.Any, len(messages))
+	msgs := make([]*types.Any, len(messages))
 	for i, msg := range messages {
 		m, ok := msg.(proto.Message)
 		if !ok {
-			return Proposal{}, fmt.Errorf("can't proto marshal %T", msg)
+			return ProposalV2{}, fmt.Errorf("can't proto marshal %T", msg)
 		}
 		any, err := types.NewAnyWithValue(m)
 		if err != nil {
-			return Proposal{}, err
+			return ProposalV2{}, err
 		}
 
-		msgsAny[i] = any
+		msgs[i] = any
 	}
 
-	msg, ok := content.(proto.Message)
-	if !ok {
-		return Proposal{}, fmt.Errorf("%T does not implement proto.Message", content)
-	}
-
-	any, err := types.NewAnyWithValue(msg)
-	if err != nil {
-		return Proposal{}, err
-	}
-
-	p := Proposal{
+	p := ProposalV2{
 		ProposalId:       id,
-		Content:          any,
+		Messages:         msgs,
 		Status:           StatusDepositPeriod,
 		FinalTallyResult: EmptyTallyResult(),
 		TotalDeposit:     sdk.NewCoins(),
 		SubmitTime:       submitTime,
 		DepositEndTime:   depositEndTime,
-		Messages:         msgsAny,
 	}
 
 	return p, nil
 }
 
 // String implements stringer interface
-func (p Proposal) String() string {
+func (p ProposalV2) String() string {
 	out, _ := yaml.Marshal(p)
 	return string(out)
 }
 
-// GetContent returns the proposal Content
-func (p Proposal) GetContent() Content {
-	content, ok := p.Content.GetCachedValue().(Content)
-	if !ok {
-		return nil
-	}
-	return content
-}
-
-func (p Proposal) ProposalType() string {
-	content := p.GetContent()
-	if content == nil {
-		return ""
-	}
-	return content.ProposalType()
-}
-
-func (p Proposal) ProposalRoute() string {
-	content := p.GetContent()
-	if content == nil {
-		return ""
-	}
-	return content.ProposalRoute()
-}
-
-func (p Proposal) GetTitle() string {
-	content := p.GetContent()
-	if content == nil {
-		return ""
-	}
-	return content.GetTitle()
-}
-
-func (p Proposal) GetMessages() ([]sdk.Msg, error) {
+func (p ProposalV2) GetMessages() ([]sdk.Msg, error) {
 	msgs := make([]sdk.Msg, len(p.Messages))
 	for i, msgAny := range p.Messages {
 		msg, ok := msgAny.GetCachedValue().(sdk.Msg)
@@ -211,7 +144,7 @@ func (p Proposal) GetMessages() ([]sdk.Msg, error) {
 }
 
 // UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
-func (p Proposal) UnpackInterfaces(unpacker types.AnyUnpacker) error {
+func (p ProposalV2) UnpackInterfaces(unpacker types.AnyUnpacker) error {
 	var msg sdk.Msg
 	for _, m := range p.Messages {
 		err := unpacker.UnpackAny(m, &msg)
@@ -219,9 +152,7 @@ func (p Proposal) UnpackInterfaces(unpacker types.AnyUnpacker) error {
 			return err
 		}
 	}
-
-	var content Content
-	return unpacker.UnpackAny(p.Content, &content)
+	return nil
 }
 
 // Proposals is an array of proposal
@@ -257,6 +188,47 @@ func (p Proposals) String() string {
 
 // UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
 func (p Proposals) UnpackInterfaces(unpacker types.AnyUnpacker) error {
+	for _, x := range p {
+		err := x.UnpackInterfaces(unpacker)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// ProposalsV2 is an array of ProposalV2
+type ProposalsV2 []ProposalV2
+
+var _ types.UnpackInterfacesMessage = Proposals{}
+
+// Equal returns true if two slices (order-dependant) of proposals are equal.
+func (p ProposalsV2) Equal(other ProposalsV2) bool {
+	if len(p) != len(other) {
+		return false
+	}
+
+	for i, proposal := range p {
+		if !proposal.Equal(other[i]) {
+			return false
+		}
+	}
+
+	return true
+}
+
+// String implements stringer interface
+func (p ProposalsV2) String() string {
+	out := "ID - (Status)\n"
+	for _, prop := range p {
+		out += fmt.Sprintf("%d - (%s)\n",
+			prop.ProposalId, prop.Status)
+	}
+	return strings.TrimSpace(out)
+}
+
+// UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
+func (p ProposalsV2) UnpackInterfaces(unpacker types.AnyUnpacker) error {
 	for _, x := range p {
 		err := x.UnpackInterfaces(unpacker)
 		if err != nil {

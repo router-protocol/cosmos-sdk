@@ -20,8 +20,14 @@ func NewQuerier(keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) sdk.Querier 
 		case types.QueryProposals:
 			return queryProposals(ctx, path[1:], req, keeper, legacyQuerierCdc)
 
+		case types.QueryProposalsV2:
+			return queryProposalsV2(ctx, path[1:], req, keeper, legacyQuerierCdc)
+
 		case types.QueryProposal:
 			return queryProposal(ctx, path[1:], req, keeper, legacyQuerierCdc)
+
+		case types.QueryProposalV2:
+			return queryProposalV2(ctx, path[1:], req, keeper, legacyQuerierCdc)
 
 		case types.QueryDeposits:
 			return queryDeposits(ctx, path[1:], req, keeper, legacyQuerierCdc)
@@ -81,6 +87,27 @@ func queryProposal(ctx sdk.Context, path []string, req abci.RequestQuery, keeper
 	}
 
 	proposal, ok := keeper.GetProposal(ctx, params.ProposalID)
+	if !ok {
+		return nil, sdkerrors.Wrapf(types.ErrUnknownProposal, "%d", params.ProposalID)
+	}
+
+	bz, err := codec.MarshalJSONIndent(legacyQuerierCdc, proposal)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
+	}
+
+	return bz, nil
+}
+
+// nolint: unparam
+func queryProposalV2(ctx sdk.Context, path []string, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
+	var params types.QueryProposalParams
+	err := legacyQuerierCdc.UnmarshalJSON(req.Data, &params)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONUnmarshal, err.Error())
+	}
+
+	proposal, ok := keeper.GetProposalV2(ctx, params.ProposalID)
 	if !ok {
 		return nil, sdkerrors.Wrapf(types.ErrUnknownProposal, "%d", params.ProposalID)
 	}
@@ -174,7 +201,7 @@ func queryTally(ctx sdk.Context, path []string, req abci.RequestQuery, keeper Ke
 
 	default:
 		// proposal is in voting period
-		_, _, tallyResult = keeper.Tally(ctx, proposal)
+		_, _, tallyResult = keeper.Tally(ctx, proposal.ProposalId)
 	}
 
 	bz, err := codec.MarshalJSONIndent(legacyQuerierCdc, tallyResult)
@@ -223,6 +250,26 @@ func queryProposals(ctx sdk.Context, _ []string, req abci.RequestQuery, keeper K
 	proposals := keeper.GetProposalsFiltered(ctx, params)
 	if proposals == nil {
 		proposals = types.Proposals{}
+	}
+
+	bz, err := codec.MarshalJSONIndent(legacyQuerierCdc, proposals)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
+	}
+
+	return bz, nil
+}
+
+func queryProposalsV2(ctx sdk.Context, _ []string, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
+	var params types.QueryProposalsParams
+	err := legacyQuerierCdc.UnmarshalJSON(req.Data, &params)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONUnmarshal, err.Error())
+	}
+
+	proposals := keeper.GetProposalsFilteredV2(ctx, params)
+	if proposals == nil {
+		proposals = types.ProposalsV2{}
 	}
 
 	bz, err := codec.MarshalJSONIndent(legacyQuerierCdc, proposals)

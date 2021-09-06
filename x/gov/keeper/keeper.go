@@ -33,8 +33,12 @@ type Keeper struct {
 	// The codec codec for binary encoding/decoding.
 	cdc codec.BinaryCodec
 
-	// Proposal router
+	// Proposal router (this is used for Message based proposals - V2)
 	router *middleware.MsgServiceRouter
+
+	// Proposal Content Handler (this is used for Content based proposals)
+	// NOTE: This is deprecated and will be removed in the next release
+	handler types.Router
 }
 
 // NewKeeper returns a governance keeper. It handles:
@@ -46,7 +50,8 @@ type Keeper struct {
 // CONTRACT: the parameter Subspace must have the param key table already initialized
 func NewKeeper(
 	cdc codec.BinaryCodec, key sdk.StoreKey, paramSpace types.ParamSubspace,
-	authKeeper types.AccountKeeper, bankKeeper types.BankKeeper, sk types.StakingKeeper, router *middleware.MsgServiceRouter,
+	authKeeper types.AccountKeeper, bankKeeper types.BankKeeper, sk types.StakingKeeper,
+	handler types.Router, router *middleware.MsgServiceRouter,
 ) Keeper {
 
 	// ensure governance module account is set
@@ -61,6 +66,7 @@ func NewKeeper(
 		bankKeeper: bankKeeper,
 		sk:         sk,
 		cdc:        cdc,
+		handler:    handler,
 		router:     router,
 	}
 }
@@ -81,9 +87,14 @@ func (keeper Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", "x/"+types.ModuleName)
 }
 
-// Router returns the gov Keeper's Router
+// Router return the gov Keeper's router (for message-based proposal)
 func (keeper Keeper) Router() *middleware.MsgServiceRouter {
 	return keeper.router
+}
+
+// Handler returns the gov Keeper's handler (for content-based proposal)
+func (keeper Keeper) Handler() types.Router {
+	return keeper.handler
 }
 
 // GetGovernanceAccount returns the governance ModuleAccount
@@ -140,6 +151,25 @@ func (keeper Keeper) IterateActiveProposalsQueue(ctx sdk.Context, endTime time.T
 	}
 }
 
+// IterateActiveProposalsQueueV2 iterates over the V2 proposals in the active proposal queue
+// and performs a callback function
+func (keeper Keeper) IterateActiveProposalsQueueV2(ctx sdk.Context, endTime time.Time, cb func(proposal types.ProposalV2) (stop bool)) {
+	iterator := keeper.ActiveProposalQueueIterator(ctx, endTime)
+
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		proposalID, _ := types.SplitActiveProposalQueueKey(iterator.Key())
+		proposal, found := keeper.GetProposalV2(ctx, proposalID)
+		if !found {
+			panic(fmt.Sprintf("proposal %d does not exist", proposalID))
+		}
+
+		if cb(proposal) {
+			break
+		}
+	}
+}
+
 // IterateInactiveProposalsQueue iterates over the proposals in the inactive proposal queue
 // and performs a callback function
 func (keeper Keeper) IterateInactiveProposalsQueue(ctx sdk.Context, endTime time.Time, cb func(proposal types.Proposal) (stop bool)) {
@@ -149,6 +179,25 @@ func (keeper Keeper) IterateInactiveProposalsQueue(ctx sdk.Context, endTime time
 	for ; iterator.Valid(); iterator.Next() {
 		proposalID, _ := types.SplitInactiveProposalQueueKey(iterator.Key())
 		proposal, found := keeper.GetProposal(ctx, proposalID)
+		if !found {
+			panic(fmt.Sprintf("proposal %d does not exist", proposalID))
+		}
+
+		if cb(proposal) {
+			break
+		}
+	}
+}
+
+// IterateInactiveProposalsQueue iterates over the proposals in the inactive proposal queue
+// and performs a callback function
+func (keeper Keeper) IterateInactiveProposalsQueueV2(ctx sdk.Context, endTime time.Time, cb func(proposal types.ProposalV2) (stop bool)) {
+	iterator := keeper.InactiveProposalQueueIterator(ctx, endTime)
+
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		proposalID, _ := types.SplitInactiveProposalQueueKey(iterator.Key())
+		proposal, found := keeper.GetProposalV2(ctx, proposalID)
 		if !found {
 			panic(fmt.Sprintf("proposal %d does not exist", proposalID))
 		}

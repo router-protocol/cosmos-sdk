@@ -166,6 +166,64 @@ func (keeper Keeper) AddDeposit(ctx sdk.Context, proposalID uint64, depositorAdd
 	return activatedVotingPeriod, nil
 }
 
+// AddDepositV2 adds or updates a deposit of a specific depositor on a specific V2 proposal
+// Activates voting period when appropriate
+func (keeper Keeper) AddDepositV2(ctx sdk.Context, proposalID uint64, depositorAddr sdk.AccAddress, depositAmount sdk.Coins) (bool, error) {
+	// Checks to see if proposal exists
+	proposal, ok := keeper.GetProposalV2(ctx, proposalID)
+	if !ok {
+		return false, sdkerrors.Wrapf(types.ErrUnknownProposal, "%d", proposalID)
+	}
+
+	// Check if proposal is still depositable
+	if (proposal.Status != types.StatusDepositPeriod) && (proposal.Status != types.StatusVotingPeriod) {
+		return false, sdkerrors.Wrapf(types.ErrInactiveProposal, "%d", proposalID)
+	}
+
+	// update the governance module's account coins pool
+	err := keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, depositorAddr, types.ModuleName, depositAmount)
+	if err != nil {
+		return false, err
+	}
+
+	// Update proposal
+	proposal.TotalDeposit = proposal.TotalDeposit.Add(depositAmount...)
+	keeper.SetProposalV2(ctx, proposal)
+
+	// Check if deposit has provided sufficient total funds to transition the proposal into the voting period
+	activatedVotingPeriod := false
+
+	if proposal.Status == types.StatusDepositPeriod && proposal.TotalDeposit.IsAllGTE(keeper.GetDepositParams(ctx).MinDeposit) {
+		keeper.ActivateVotingPeriodV2(ctx, proposal)
+
+		activatedVotingPeriod = true
+	}
+
+	// Add or update deposit object
+	deposit, found := keeper.GetDeposit(ctx, proposalID, depositorAddr)
+
+	if found {
+		deposit.Amount = deposit.Amount.Add(depositAmount...)
+	} else {
+		deposit = types.NewDeposit(proposalID, depositorAddr, depositAmount)
+	}
+
+	// called when deposit has been added to a proposal, however the proposal may not be active
+	keeper.AfterProposalDeposit(ctx, proposalID, depositorAddr)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventTypeProposalDeposit,
+			sdk.NewAttribute(sdk.AttributeKeyAmount, depositAmount.String()),
+			sdk.NewAttribute(types.AttributeKeyProposalID, fmt.Sprintf("%d", proposalID)),
+		),
+	)
+
+	keeper.SetDeposit(ctx, deposit)
+
+	return activatedVotingPeriod, nil
+}
+
 // RefundAndDeleteDeposits refunds and deletes all the deposits on a specific proposal.
 func (keeper Keeper) RefundAndDeleteDeposits(ctx sdk.Context, proposalID uint64) {
 	store := ctx.KVStore(keeper.storeKey)

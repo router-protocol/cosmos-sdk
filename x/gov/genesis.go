@@ -41,6 +41,16 @@ func InitGenesis(ctx sdk.Context, ak types.AccountKeeper, bk types.BankKeeper, k
 		k.SetProposal(ctx, proposal)
 	}
 
+	for _, proposalV2 := range data.ProposalsV2 {
+		switch proposalV2.Status {
+		case types.StatusDepositPeriod:
+			k.InsertInactiveProposalQueue(ctx, proposalV2.ProposalId, proposalV2.DepositEndTime)
+		case types.StatusVotingPeriod:
+			k.InsertActiveProposalQueue(ctx, proposalV2.ProposalId, proposalV2.VotingEndTime)
+		}
+		k.SetProposalV2(ctx, proposalV2)
+	}
+
 	// if account has zero balance it probably means it's not set, so we set it
 	balance := bk.GetAllBalances(ctx, moduleAcc.GetAddress())
 	if balance.IsZero() {
@@ -60,6 +70,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	votingParams := k.GetVotingParams(ctx)
 	tallyParams := k.GetTallyParams(ctx)
 	proposals := k.GetProposals(ctx)
+	proposalsV2 := k.GetProposalsV2(ctx)
 
 	var proposalsDeposits types.Deposits
 	var proposalsVotes types.Votes
@@ -71,6 +82,14 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 		proposalsVotes = append(proposalsVotes, votes...)
 	}
 
+	for _, proposalV2 := range proposalsV2 {
+		deposits := k.GetDeposits(ctx, proposalV2.ProposalId)
+		proposalsDeposits = append(proposalsDeposits, deposits...)
+
+		votes := k.GetVotes(ctx, proposalV2.ProposalId)
+		proposalsVotes = append(proposalsVotes, votes...)
+	}
+
 	return &types.GenesisState{
 		StartingProposalId: startingProposalID,
 		Deposits:           proposalsDeposits,
@@ -79,5 +98,6 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 		DepositParams:      depositParams,
 		VotingParams:       votingParams,
 		TallyParams:        tallyParams,
+		ProposalsV2:        proposalsV2,
 	}
 }

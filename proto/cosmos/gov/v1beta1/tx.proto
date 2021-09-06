@@ -13,7 +13,7 @@ option go_package = "github.com/cosmos/cosmos-sdk/x/gov/types";
 service Msg {
   // SubmitProposal defines a method to create new proposal given a content.
   rpc SubmitProposal(MsgSubmitProposal) returns (MsgSubmitProposalResponse);
-  rpc SubmitProposalV2(MsgSubmitProposal2) returns (MsgSubmitProposalResponse);
+  rpc SubmitProposalV2(MsgSubmitProposalV2) returns (MsgSubmitProposalResponse);
 
   // Vote defines a method to add a vote on a specific proposal.
   rpc Vote(MsgVote) returns (MsgVoteResponse);

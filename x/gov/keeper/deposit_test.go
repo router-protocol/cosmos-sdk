@@ -18,7 +18,7 @@ func TestDeposits(t *testing.T) {
 	TestAddrs := simapp.AddTestAddrsIncremental(app, ctx, 2, sdk.NewInt(10000000))
 
 	tp := TestProposal
-	proposal, err := app.GovKeeper.SubmitProposal(ctx, tp, []sdk.Msg{})
+	proposal, err := app.GovKeeper.SubmitProposal(ctx, tp)
 	require.NoError(t, err)
 	proposalID := proposal.ProposalId
 
@@ -102,7 +102,7 @@ func TestDeposits(t *testing.T) {
 	require.Equal(t, addr1Initial, app.BankKeeper.GetAllBalances(ctx, TestAddrs[1]))
 
 	// Test delete and burn deposits
-	proposal, err = app.GovKeeper.SubmitProposal(ctx, tp, []sdk.Msg{})
+	proposal, err = app.GovKeeper.SubmitProposal(ctx, tp)
 	require.NoError(t, err)
 	proposalID = proposal.ProposalId
 	_, err = app.GovKeeper.AddDeposit(ctx, proposalID, TestAddrs[0], fourStake)

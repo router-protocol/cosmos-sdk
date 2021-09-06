@@ -12,7 +12,7 @@ import (
 
 func (suite *KeeperTestSuite) TestGetSetProposal() {
 	tp := TestProposal
-	proposal, err := suite.app.GovKeeper.SubmitProposal(suite.ctx, tp, []sdk.Msg{})
+	proposal, err := suite.app.GovKeeper.SubmitProposal(suite.ctx, tp)
 	suite.Require().NoError(err)
 	proposalID := proposal.ProposalId
 	suite.app.GovKeeper.SetProposal(suite.ctx, proposal)
@@ -24,7 +24,7 @@ func (suite *KeeperTestSuite) TestGetSetProposal() {
 
 func (suite *KeeperTestSuite) TestActivateVotingPeriod() {
 	tp := TestProposal
-	proposal, err := suite.app.GovKeeper.SubmitProposal(suite.ctx, tp, []sdk.Msg{})
+	proposal, err := suite.app.GovKeeper.SubmitProposal(suite.ctx, tp)
 	suite.Require().NoError(err)
 
 	suite.Require().True(proposal.VotingStartTime.Equal(time.Time{}))
@@ -71,30 +71,44 @@ func (msg *testProposalMsg) Route() string {
 }
 
 func (suite *KeeperTestSuite) TestSubmitProposal() {
-	govAccount := suite.app.GovKeeper.GetGovernanceAccount(suite.ctx)
+
+	testCases := []struct {
+		content     types.Content
+		expectedErr error
+	}{
+		{&types.TextProposal{Title: "title", Description: "description"}, nil},
+		// Keeper does not check the validity of title and description, no error
+		{&types.TextProposal{Title: "", Description: "description"}, nil},
+		{&types.TextProposal{Title: strings.Repeat("1234567890", 100), Description: "description"}, nil},
+		{&types.TextProposal{Title: "title", Description: ""}, nil},
+		{&types.TextProposal{Title: "title", Description: strings.Repeat("1234567890", 1000)}, nil},
+		// TODO: add errors for empty messages and messages with invalid routes
+	}
+
+	for i, tc := range testCases {
+		_, err := suite.app.GovKeeper.SubmitProposal(suite.ctx, tc.content)
+		suite.Require().True(errors.Is(tc.expectedErr, err), "tc #%d; got: %v, expected: %v", i, err, tc.expectedErr)
+	}
+}
+
+func (suite *KeeperTestSuite) TestSubmitProposalV2() {
 	// Proposal is for the gov module to vote on another proposal :)
+	govAccount := suite.app.GovKeeper.GetGovernanceAccount(suite.ctx)
 	voteProposal := []sdk.Msg{types.NewMsgVote(govAccount.GetAddress(), 0, types.OptionYes)}
 	invalidAddressProposal := []sdk.Msg{newTestProposalMsg(suite.addrs[0])}
 	invalidRouteProposal := []sdk.Msg{newTestProposalMsg(govAccount.GetAddress())}
 
 	testCases := []struct {
-		content     types.Content
 		messages    []sdk.Msg
 		expectedErr error
 	}{
-		{&types.TextProposal{Title: "title", Description: "description"}, voteProposal, nil},
-		// Keeper does not check the validity of title and description, no error
-		{&types.TextProposal{Title: "", Description: "description"}, voteProposal, nil},
-		{&types.TextProposal{Title: strings.Repeat("1234567890", 100), Description: "description"}, voteProposal, nil},
-		{&types.TextProposal{Title: "title", Description: ""}, voteProposal, nil},
-		{&types.TextProposal{Title: "title", Description: strings.Repeat("1234567890", 1000)}, voteProposal, nil},
-		// TODO: add errors for empty messages and messages with invalid routes
-		{&types.TextProposal{Title: "title", Description: "description"}, invalidAddressProposal, types.ErrInvalidSigner},
-		{&types.TextProposal{Title: "title", Description: "description"}, invalidRouteProposal, types.ErrUnroutableProposalMsg},
+		{voteProposal, nil},
+		{invalidAddressProposal, types.ErrInvalidSigner},
+		{invalidRouteProposal, types.ErrUnroutableProposalMsg},
 	}
 
 	for i, tc := range testCases {
-		_, err := suite.app.GovKeeper.SubmitProposal(suite.ctx, tc.content, tc.messages)
+		_, err := suite.app.GovKeeper.SubmitProposalV2(suite.ctx, tc.messages)
 		suite.Require().True(errors.Is(tc.expectedErr, err), "tc #%d; got: %v, expected: %v", i, err, tc.expectedErr)
 	}
 }
@@ -107,7 +121,7 @@ func (suite *KeeperTestSuite) TestGetProposalsFiltered() {
 
 	for _, s := range status {
 		for i := 0; i < 50; i++ {
-			p, err := types.NewProposal(TestProposal, []sdk.Msg{}, proposalID, time.Now(), time.Now())
+			p, err := types.NewProposal(TestProposal, proposalID, time.Now(), time.Now())
 			suite.Require().NoError(err)
 
 			p.Status = s

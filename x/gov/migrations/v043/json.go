@@ -27,5 +27,6 @@ func MigrateJSON(oldState *types.GenesisState) *types.GenesisState {
 		DepositParams:      oldState.DepositParams,
 		VotingParams:       oldState.VotingParams,
 		TallyParams:        oldState.TallyParams,
+		ProposalsV2:        oldState.ProposalsV2,
 	}
 }
