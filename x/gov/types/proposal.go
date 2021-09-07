@@ -11,6 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdktx "github.com/cosmos/cosmos-sdk/types/tx"
 )
 
 // DefaultStartingProposalID is 1
@@ -130,29 +131,14 @@ func (p Proposal2) String() string {
 	return string(out)
 }
 
+// GetMessages returns the messages in the proposal
 func (p Proposal2) GetMessages() ([]sdk.Msg, error) {
-	msgs := make([]sdk.Msg, len(p.Messages))
-	for i, msgAny := range p.Messages {
-		msg, ok := msgAny.GetCachedValue().(sdk.Msg)
-		if !ok {
-			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "messages contains %T which is not a sdk.MsgRequest", msgAny)
-		}
-		msgs[i] = msg
-	}
-
-	return msgs, nil
+	return sdktx.GetMsgs(p.Messages, "sdk.MsgProposal")
 }
 
 // UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
 func (p Proposal2) UnpackInterfaces(unpacker types.AnyUnpacker) error {
-	var msg sdk.Msg
-	for _, m := range p.Messages {
-		err := unpacker.UnpackAny(m, &msg)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
+	return sdktx.UnpackInterfaces(unpacker, p.Messages)
 }
 
 // Proposals is an array of proposal
