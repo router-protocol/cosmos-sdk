@@ -61,7 +61,7 @@ func (k msgServer) SubmitProposal(goCtx context.Context, msg *types.MsgSubmitPro
 	}, nil
 }
 
-func (k msgServer) SubmitProposalV2(goCtx context.Context, msg *types.MsgSubmitProposalV2) (*types.MsgSubmitProposalV2Response, error) {
+func (k msgServer) SubmitProposal2(goCtx context.Context, msg *types.MsgSubmitProposal2) (*types.MsgSubmitProposal2Response, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	msgs, err := msg.GetMessages()
@@ -69,14 +69,14 @@ func (k msgServer) SubmitProposalV2(goCtx context.Context, msg *types.MsgSubmitP
 		return nil, err
 	}
 
-	proposal, err := k.Keeper.SubmitProposalV2(ctx, msgs)
+	proposal, err := k.Keeper.SubmitProposal2(ctx, msgs)
 	if err != nil {
 		return nil, err
 	}
 
 	defer telemetry.IncrCounter(1, types.ModuleName, "proposal")
 
-	votingStarted, err := k.Keeper.AddDepositV2(ctx, proposal.ProposalId, msg.GetProposer(), msg.GetInitialDeposit())
+	votingStarted, err := k.Keeper.AddDeposit2(ctx, proposal.ProposalId, msg.GetProposer(), msg.GetInitialDeposit())
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +97,7 @@ func (k msgServer) SubmitProposalV2(goCtx context.Context, msg *types.MsgSubmitP
 	}
 
 	ctx.EventManager().EmitEvent(submitEvent)
-	return &types.MsgSubmitProposalV2Response{
+	return &types.MsgSubmitProposal2Response{
 		ProposalId: proposal.ProposalId,
 	}, nil
 }
@@ -115,7 +115,7 @@ func (k msgServer) Vote(goCtx context.Context, msg *types.MsgVote) (*types.MsgVo
 	case types.Version1:
 		err = k.Keeper.AddVote(ctx, msg.ProposalId, accAddr, types.NewNonSplitVoteOption(msg.Option))
 	case types.Version2:
-		err = k.Keeper.AddVoteV2(ctx, msg.ProposalId, accAddr, types.NewNonSplitVoteOption(msg.Option))
+		err = k.Keeper.AddVote2(ctx, msg.ProposalId, accAddr, types.NewNonSplitVoteOption(msg.Option))
 	default:
 		err = sdkerrors.Wrapf(types.ErrUnknownProposal, "%d", msg.ProposalId)
 	}
@@ -188,7 +188,7 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 	case types.Version1:
 		votingStarted, err = k.Keeper.AddDeposit(ctx, msg.ProposalId, accAddr, msg.Amount)
 	case types.Version2:
-		votingStarted, err = k.Keeper.AddDepositV2(ctx, msg.ProposalId, accAddr, msg.Amount)
+		votingStarted, err = k.Keeper.AddDeposit2(ctx, msg.ProposalId, accAddr, msg.Amount)
 	default:
 		err = sdkerrors.Wrapf(types.ErrUnknownProposal, "%d", msg.ProposalId)
 	}

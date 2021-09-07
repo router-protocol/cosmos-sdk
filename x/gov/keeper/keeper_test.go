@@ -48,7 +48,7 @@ func TestIncrementProposalNumber(t *testing.T) {
 	require.NoError(t, err)
 	_, err = app.GovKeeper.SubmitProposal(ctx, tp)
 	require.NoError(t, err)
-	_, err = app.GovKeeper.SubmitProposalV2(ctx, proposalMsgs)
+	_, err = app.GovKeeper.SubmitProposal2(ctx, proposalMsgs)
 	require.NoError(t, err)
 	_, err = app.GovKeeper.SubmitProposal(ctx, tp)
 	require.NoError(t, err)
@@ -90,7 +90,7 @@ func TestProposalQueues(t *testing.T) {
 	activeIterator.Close()
 }
 
-func TestProposalQueuesV2(t *testing.T) {
+func TestProposalQueues2(t *testing.T) {
 	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
@@ -98,7 +98,7 @@ func TestProposalQueuesV2(t *testing.T) {
 	proposalMsgs := []sdk.Msg{types.NewMsgVote(govAccount.GetAddress(), 0, types.OptionYes)}
 
 	// create test proposal
-	proposal, err := app.GovKeeper.SubmitProposalV2(ctx, proposalMsgs)
+	proposal, err := app.GovKeeper.SubmitProposal2(ctx, proposalMsgs)
 	require.NoError(t, err)
 
 	inactiveIterator := app.GovKeeper.InactiveProposalQueueIterator(ctx, proposal.DepositEndTime)
@@ -108,9 +108,9 @@ func TestProposalQueuesV2(t *testing.T) {
 	require.Equal(t, proposalID, proposal.ProposalId)
 	inactiveIterator.Close()
 
-	app.GovKeeper.ActivateVotingPeriodV2(ctx, proposal)
+	app.GovKeeper.ActivateVotingPeriod2(ctx, proposal)
 
-	receivedProposal, ok := app.GovKeeper.GetProposalV2(ctx, proposal.ProposalId)
+	receivedProposal, ok := app.GovKeeper.GetProposal2(ctx, proposal.ProposalId)
 	require.True(t, ok)
 	require.Equal(t, proposal.ProposalId, receivedProposal.ProposalId)
 	require.Equal(t, types.StatusVotingPeriod, receivedProposal.Status)

@@ -86,7 +86,7 @@ func TestTallyOnlyValidatorsAllYes(t *testing.T) {
 	require.False(t, tallyResults.Equals(types.EmptyTallyResult()))
 }
 
-func TestTallyOnlyValidatorsAllYesV2(t *testing.T) {
+func TestTallyOnlyValidatorsAllYes2(t *testing.T) {
 	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
@@ -96,17 +96,17 @@ func TestTallyOnlyValidatorsAllYesV2(t *testing.T) {
 	// Proposal is for the gov module to vote on another proposal :)
 	proposalMsgs := []sdk.Msg{types.NewMsgVote(govAccount.GetAddress(), 0, types.OptionYes)}
 
-	proposal, err := app.GovKeeper.SubmitProposalV2(ctx, proposalMsgs)
+	proposal, err := app.GovKeeper.SubmitProposal2(ctx, proposalMsgs)
 	require.NoError(t, err)
 	proposalID := proposal.ProposalId
 	proposal.Status = types.StatusVotingPeriod
-	app.GovKeeper.SetProposalV2(ctx, proposal)
+	app.GovKeeper.SetProposal2(ctx, proposal)
 
 	require.NoError(t, app.GovKeeper.AddVote(ctx, proposalID, addrs[0], types.NewNonSplitVoteOption(types.OptionYes)))
 	require.NoError(t, app.GovKeeper.AddVote(ctx, proposalID, addrs[1], types.NewNonSplitVoteOption(types.OptionYes)))
 	require.NoError(t, app.GovKeeper.AddVote(ctx, proposalID, addrs[2], types.NewNonSplitVoteOption(types.OptionYes)))
 
-	proposal, ok := app.GovKeeper.GetProposalV2(ctx, proposalID)
+	proposal, ok := app.GovKeeper.GetProposal2(ctx, proposalID)
 	require.True(t, ok)
 	passes, burnDeposits, tallyResults := app.GovKeeper.Tally(ctx, proposal.ProposalId)
 

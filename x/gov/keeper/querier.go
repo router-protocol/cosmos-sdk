@@ -20,14 +20,14 @@ func NewQuerier(keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) sdk.Querier 
 		case types.QueryProposals:
 			return queryProposals(ctx, path[1:], req, keeper, legacyQuerierCdc)
 
-		case types.QueryProposalsV2:
-			return queryProposalsV2(ctx, path[1:], req, keeper, legacyQuerierCdc)
+		case types.QueryProposals2:
+			return queryProposals2(ctx, path[1:], req, keeper, legacyQuerierCdc)
 
 		case types.QueryProposal:
 			return queryProposal(ctx, path[1:], req, keeper, legacyQuerierCdc)
 
-		case types.QueryProposalV2:
-			return queryProposalV2(ctx, path[1:], req, keeper, legacyQuerierCdc)
+		case types.QueryProposal2:
+			return queryProposal2(ctx, path[1:], req, keeper, legacyQuerierCdc)
 
 		case types.QueryDeposits:
 			return queryDeposits(ctx, path[1:], req, keeper, legacyQuerierCdc)
@@ -100,14 +100,14 @@ func queryProposal(ctx sdk.Context, path []string, req abci.RequestQuery, keeper
 }
 
 // nolint: unparam
-func queryProposalV2(ctx sdk.Context, path []string, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
+func queryProposal2(ctx sdk.Context, path []string, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
 	var params types.QueryProposalParams
 	err := legacyQuerierCdc.UnmarshalJSON(req.Data, &params)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONUnmarshal, err.Error())
 	}
 
-	proposal, ok := keeper.GetProposalV2(ctx, params.ProposalID)
+	proposal, ok := keeper.GetProposal2(ctx, params.ProposalID)
 	if !ok {
 		return nil, sdkerrors.Wrapf(types.ErrUnknownProposal, "%d", params.ProposalID)
 	}
@@ -260,16 +260,16 @@ func queryProposals(ctx sdk.Context, _ []string, req abci.RequestQuery, keeper K
 	return bz, nil
 }
 
-func queryProposalsV2(ctx sdk.Context, _ []string, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
+func queryProposals2(ctx sdk.Context, _ []string, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
 	var params types.QueryProposalsParams
 	err := legacyQuerierCdc.UnmarshalJSON(req.Data, &params)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONUnmarshal, err.Error())
 	}
 
-	proposals := keeper.GetProposalsFilteredV2(ctx, params)
+	proposals := keeper.GetProposalsFiltered2(ctx, params)
 	if proposals == nil {
-		proposals = types.ProposalsV2{}
+		proposals = types.Proposals2{}
 	}
 
 	bz, err := codec.MarshalJSONIndent(legacyQuerierCdc, proposals)

@@ -146,10 +146,10 @@ $ %s tx gov submit-proposal --title="Test Proposal" --description="My awesome pr
 	return cmd
 }
 
-// NewCmdSubmitProposalV2 implements submitting a proposal transaction command.
-func NewCmdSubmitProposalV2() *cobra.Command {
+// NewCmdSubmitProposal2 implements submitting a proposal transaction command.
+func NewCmdSubmitProposal2() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "submit-proposalV2",
+		Use:   "submit-proposal2",
 		Short: "Submit a proposal along with an initial deposit",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a proposal along with an initial deposit.
@@ -195,7 +195,7 @@ $ %s tx gov submit-proposal2 \
 				return err
 			}
 
-			msg, err := types.NewMsgSubmitProposalV2(messages, deposit, clientCtx.GetFromAddress())
+			msg, err := types.NewMsgSubmitProposal2(messages, deposit, clientCtx.GetFromAddress())
 			if err != nil {
 				return fmt.Errorf("invalid message: %w", err)
 			}

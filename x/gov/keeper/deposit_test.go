@@ -114,7 +114,7 @@ func TestDeposits(t *testing.T) {
 	require.Equal(t, addr0Initial.Sub(fourStake), app.BankKeeper.GetAllBalances(ctx, TestAddrs[0]))
 }
 
-func TestDepositsV2(t *testing.T) {
+func TestDeposits2(t *testing.T) {
 	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
@@ -122,7 +122,7 @@ func TestDepositsV2(t *testing.T) {
 
 	govAccount := app.GovKeeper.GetGovernanceAccount(ctx)
 	msgs := []sdk.Msg{types.NewMsgVote(govAccount.GetAddress(), 0, types.OptionYes)}
-	proposal, err := app.GovKeeper.SubmitProposalV2(ctx, msgs)
+	proposal, err := app.GovKeeper.SubmitProposal2(ctx, msgs)
 	require.NoError(t, err)
 	proposalID := proposal.ProposalId
 
@@ -133,19 +133,19 @@ func TestDepositsV2(t *testing.T) {
 	// Check no deposits at beginning
 	deposit, found := app.GovKeeper.GetDeposit(ctx, proposalID, TestAddrs[1])
 	require.False(t, found)
-	proposal, ok := app.GovKeeper.GetProposalV2(ctx, proposalID)
+	proposal, ok := app.GovKeeper.GetProposal2(ctx, proposalID)
 	require.True(t, ok)
 	require.True(t, proposal.VotingStartTime.Equal(time.Time{}))
 
 	// Check first deposit
-	votingStarted, err := app.GovKeeper.AddDepositV2(ctx, proposalID, TestAddrs[0], fourStake)
+	votingStarted, err := app.GovKeeper.AddDeposit2(ctx, proposalID, TestAddrs[0], fourStake)
 	require.NoError(t, err)
 	require.False(t, votingStarted)
 	deposit, found = app.GovKeeper.GetDeposit(ctx, proposalID, TestAddrs[0])
 	require.True(t, found)
 	require.Equal(t, fourStake, deposit.Amount)
 	require.Equal(t, TestAddrs[0].String(), deposit.Depositor)
-	proposal, ok = app.GovKeeper.GetProposalV2(ctx, proposalID)
+	proposal, ok = app.GovKeeper.GetProposal2(ctx, proposalID)
 	require.True(t, ok)
 	require.Equal(t, fourStake, proposal.TotalDeposit)
 	require.Equal(t, addr0Initial.Sub(fourStake), app.BankKeeper.GetAllBalances(ctx, TestAddrs[0]))

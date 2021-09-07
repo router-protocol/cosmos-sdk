@@ -14,16 +14,16 @@ import (
 
 // Governance message types and routes
 const (
-	TypeMsgDeposit          = "deposit"
-	TypeMsgVote             = "vote"
-	TypeMsgVoteWeighted     = "weighted_vote"
-	TypeMsgSubmitProposal   = "submit_proposal"
-	TypeMsgSubmitProposalV2 = "submit_proposal2"
+	TypeMsgDeposit         = "deposit"
+	TypeMsgVote            = "vote"
+	TypeMsgVoteWeighted    = "weighted_vote"
+	TypeMsgSubmitProposal  = "submit_proposal"
+	TypeMsgSubmitProposal2 = "submit_proposal2"
 )
 
 var (
-	_, _, _, _, _ sdk.Msg                       = &MsgSubmitProposal{}, &MsgDeposit{}, &MsgVote{}, &MsgVoteWeighted{}, &MsgSubmitProposalV2{}
-	_, _          types.UnpackInterfacesMessage = &MsgSubmitProposal{}, &MsgSubmitProposalV2{}
+	_, _, _, _, _ sdk.Msg                       = &MsgSubmitProposal{}, &MsgDeposit{}, &MsgVote{}, &MsgVoteWeighted{}, &MsgSubmitProposal2{}
+	_, _          types.UnpackInterfacesMessage = &MsgSubmitProposal{}, &MsgSubmitProposal2{}
 )
 
 // NewMsgSubmitProposal creates a new MsgSubmitProposal.
@@ -134,9 +134,9 @@ func (m MsgSubmitProposal) UnpackInterfaces(unpacker types.AnyUnpacker) error {
 	return unpacker.UnpackAny(m.Content, &content)
 }
 
-// NewMsgSubmitProposalV2 creates a new MsgSubmitProposalV2.
+// NewMsgSubmitProposal2 creates a new MsgSubmitProposal2.
 //nolint:interfacer
-func NewMsgSubmitProposalV2(messages []sdk.Msg, initialDeposit sdk.Coins, proposer sdk.AccAddress) (*MsgSubmitProposalV2, error) {
+func NewMsgSubmitProposal2(messages []sdk.Msg, initialDeposit sdk.Coins, proposer sdk.AccAddress) (*MsgSubmitProposal2, error) {
 	msgsAny := make([]*types.Any, len(messages))
 	for i, msg := range messages {
 		m, ok := msg.(proto.Message)
@@ -150,7 +150,7 @@ func NewMsgSubmitProposalV2(messages []sdk.Msg, initialDeposit sdk.Coins, propos
 		msgsAny[i] = any
 	}
 
-	m := &MsgSubmitProposalV2{
+	m := &MsgSubmitProposal2{
 		Messages:       msgsAny,
 		InitialDeposit: initialDeposit,
 		Proposer:       proposer.String(),
@@ -159,14 +159,14 @@ func NewMsgSubmitProposalV2(messages []sdk.Msg, initialDeposit sdk.Coins, propos
 	return m, nil
 }
 
-func (m *MsgSubmitProposalV2) GetInitialDeposit() sdk.Coins { return m.InitialDeposit }
+func (m *MsgSubmitProposal2) GetInitialDeposit() sdk.Coins { return m.InitialDeposit }
 
-func (m *MsgSubmitProposalV2) GetProposer() sdk.AccAddress {
+func (m *MsgSubmitProposal2) GetProposer() sdk.AccAddress {
 	proposer, _ := sdk.AccAddressFromBech32(m.Proposer)
 	return proposer
 }
 
-func (m *MsgSubmitProposalV2) GetMessages() ([]sdk.Msg, error) {
+func (m *MsgSubmitProposal2) GetMessages() ([]sdk.Msg, error) {
 	msgs := make([]sdk.Msg, len(m.Messages))
 	for i, msgAny := range m.Messages {
 		msg, ok := msgAny.GetCachedValue().(sdk.Msg)
@@ -179,22 +179,22 @@ func (m *MsgSubmitProposalV2) GetMessages() ([]sdk.Msg, error) {
 	return msgs, nil
 }
 
-func (m *MsgSubmitProposalV2) SetInitialDeposit(coins sdk.Coins) {
+func (m *MsgSubmitProposal2) SetInitialDeposit(coins sdk.Coins) {
 	m.InitialDeposit = coins
 }
 
-func (m *MsgSubmitProposalV2) SetProposer(address fmt.Stringer) {
+func (m *MsgSubmitProposal2) SetProposer(address fmt.Stringer) {
 	m.Proposer = address.String()
 }
 
 // Route implements Msg
-func (m MsgSubmitProposalV2) Route() string { return RouterKey }
+func (m MsgSubmitProposal2) Route() string { return RouterKey }
 
 // Type implements Msg
-func (m MsgSubmitProposalV2) Type() string { return TypeMsgSubmitProposalV2 }
+func (m MsgSubmitProposal2) Type() string { return TypeMsgSubmitProposal2 }
 
 // ValidateBasic implements Msg
-func (m MsgSubmitProposalV2) ValidateBasic() error {
+func (m MsgSubmitProposal2) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(m.Proposer); err != nil {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, m.Proposer)
 	}
@@ -218,25 +218,25 @@ func (m MsgSubmitProposalV2) ValidateBasic() error {
 }
 
 // GetSignBytes implements Msg
-func (m MsgSubmitProposalV2) GetSignBytes() []byte {
+func (m MsgSubmitProposal2) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(&m)
 	return sdk.MustSortJSON(bz)
 }
 
 // GetSigners implements Msg
-func (m MsgSubmitProposalV2) GetSigners() []sdk.AccAddress {
+func (m MsgSubmitProposal2) GetSigners() []sdk.AccAddress {
 	proposer, _ := sdk.AccAddressFromBech32(m.Proposer)
 	return []sdk.AccAddress{proposer}
 }
 
 // String implements the Stringer interface
-func (m MsgSubmitProposalV2) String() string {
+func (m MsgSubmitProposal2) String() string {
 	out, _ := yaml.Marshal(m)
 	return string(out)
 }
 
 // UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
-func (m MsgSubmitProposalV2) UnpackInterfaces(unpacker types.AnyUnpacker) error {
+func (m MsgSubmitProposal2) UnpackInterfaces(unpacker types.AnyUnpacker) error {
 	var msg sdk.Msg
 	for _, m := range m.Messages {
 		err := unpacker.UnpackAny(m, &msg)

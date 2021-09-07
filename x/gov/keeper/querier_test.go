@@ -173,7 +173,7 @@ func TestQueries(t *testing.T) {
 
 	proposal1.TotalDeposit = proposal1.TotalDeposit.Add(deposit1.Amount...)
 
-	proposal2, err := app.GovKeeper.SubmitProposalV2(ctx, proposalMsgs)
+	proposal2, err := app.GovKeeper.SubmitProposal2(ctx, proposalMsgs)
 	require.NoError(t, err)
 	deposit2 := types.NewDeposit(proposal2.ProposalId, TestAddrs[0], consCoins)
 	depositer2, err := sdk.AccAddressFromBech32(deposit2.Depositor)

@@ -90,28 +90,28 @@ func (p Proposal) UnpackInterfaces(unpacker types.AnyUnpacker) error {
 	return unpacker.UnpackAny(p.Content, &content)
 }
 
-// NewProposalV2 creates a new Proposal2 instance
-func NewProposalV2(
+// NewProposal2 creates a new Proposal2 instance
+func NewProposal2(
 	messages []sdk.Msg,
 	id uint64,
 	submitTime, depositEndTime time.Time,
-) (ProposalV2, error) {
+) (Proposal2, error) {
 
 	msgs := make([]*types.Any, len(messages))
 	for i, msg := range messages {
 		m, ok := msg.(proto.Message)
 		if !ok {
-			return ProposalV2{}, fmt.Errorf("can't proto marshal %T", msg)
+			return Proposal2{}, fmt.Errorf("can't proto marshal %T", msg)
 		}
 		any, err := types.NewAnyWithValue(m)
 		if err != nil {
-			return ProposalV2{}, err
+			return Proposal2{}, err
 		}
 
 		msgs[i] = any
 	}
 
-	p := ProposalV2{
+	p := Proposal2{
 		ProposalId:       id,
 		Messages:         msgs,
 		Status:           StatusDepositPeriod,
@@ -125,12 +125,12 @@ func NewProposalV2(
 }
 
 // String implements stringer interface
-func (p ProposalV2) String() string {
+func (p Proposal2) String() string {
 	out, _ := yaml.Marshal(p)
 	return string(out)
 }
 
-func (p ProposalV2) GetMessages() ([]sdk.Msg, error) {
+func (p Proposal2) GetMessages() ([]sdk.Msg, error) {
 	msgs := make([]sdk.Msg, len(p.Messages))
 	for i, msgAny := range p.Messages {
 		msg, ok := msgAny.GetCachedValue().(sdk.Msg)
@@ -144,7 +144,7 @@ func (p ProposalV2) GetMessages() ([]sdk.Msg, error) {
 }
 
 // UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
-func (p ProposalV2) UnpackInterfaces(unpacker types.AnyUnpacker) error {
+func (p Proposal2) UnpackInterfaces(unpacker types.AnyUnpacker) error {
 	var msg sdk.Msg
 	for _, m := range p.Messages {
 		err := unpacker.UnpackAny(m, &msg)
@@ -197,13 +197,13 @@ func (p Proposals) UnpackInterfaces(unpacker types.AnyUnpacker) error {
 	return nil
 }
 
-// ProposalsV2 is an array of ProposalV2
-type ProposalsV2 []ProposalV2
+// Proposals2 is an array of Proposal2
+type Proposals2 []Proposal2
 
 var _ types.UnpackInterfacesMessage = Proposals{}
 
 // Equal returns true if two slices (order-dependant) of proposals are equal.
-func (p ProposalsV2) Equal(other ProposalsV2) bool {
+func (p Proposals2) Equal(other Proposals2) bool {
 	if len(p) != len(other) {
 		return false
 	}
@@ -218,7 +218,7 @@ func (p ProposalsV2) Equal(other ProposalsV2) bool {
 }
 
 // String implements stringer interface
-func (p ProposalsV2) String() string {
+func (p Proposals2) String() string {
 	out := "ID - (Status)\n"
 	for _, prop := range p {
 		out += fmt.Sprintf("%d - (%s)\n",
@@ -228,7 +228,7 @@ func (p ProposalsV2) String() string {
 }
 
 // UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
-func (p ProposalsV2) UnpackInterfaces(unpacker types.AnyUnpacker) error {
+func (p Proposals2) UnpackInterfaces(unpacker types.AnyUnpacker) error {
 	for _, x := range p {
 		err := x.UnpackInterfaces(unpacker)
 		if err != nil {

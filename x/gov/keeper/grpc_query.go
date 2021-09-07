@@ -278,10 +278,10 @@ func (q Keeper) TallyResult(c context.Context, req *types.QueryTallyResultReques
 	return &types.QueryTallyResultResponse{Tally: tallyResult}, nil
 }
 
-// V2 Proposals
+// 2 Proposals
 
-// Proposal returns proposal details based on ProposalID
-func (q Keeper) ProposalV2(c context.Context, req *types.QueryProposalV2Request) (*types.QueryProposalV2Response, error) {
+// Proposal2 returns proposal details based on ProposalID
+func (q Keeper) Proposal2(c context.Context, req *types.QueryProposal2Request) (*types.QueryProposal2Response, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -292,24 +292,24 @@ func (q Keeper) ProposalV2(c context.Context, req *types.QueryProposalV2Request)
 
 	ctx := sdk.UnwrapSDKContext(c)
 
-	proposal, found := q.GetProposalV2(ctx, req.ProposalId)
+	proposal, found := q.GetProposal2(ctx, req.ProposalId)
 	if !found {
 		return nil, status.Errorf(codes.NotFound, "proposal %d doesn't exist", req.ProposalId)
 	}
 
-	return &types.QueryProposalV2Response{Proposal: proposal}, nil
+	return &types.QueryProposal2Response{Proposal: proposal}, nil
 }
 
-// Proposals implements the Query/Proposals gRPC method
-func (q Keeper) ProposalsV2(c context.Context, req *types.QueryProposalsV2Request) (*types.QueryProposalsV2Response, error) {
-	var filteredProposals types.ProposalsV2
+// Proposals2 implements the Query/Proposals gRPC method
+func (q Keeper) Proposals2(c context.Context, req *types.QueryProposals2Request) (*types.QueryProposals2Response, error) {
+	var filteredProposals types.Proposals2
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(q.storeKey)
-	proposalStore := prefix.NewStore(store, types.ProposalsKeyPrefixV2)
+	proposalStore := prefix.NewStore(store, types.ProposalsKeyPrefix2)
 
 	pageRes, err := query.FilteredPaginate(proposalStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
-		var p types.ProposalV2
+		var p types.Proposal2
 		if err := q.cdc.Unmarshal(value, &p); err != nil {
 			return false, status.Error(codes.Internal, err.Error())
 		}
@@ -355,5 +355,5 @@ func (q Keeper) ProposalsV2(c context.Context, req *types.QueryProposalsV2Reques
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryProposalsV2Response{Proposals: filteredProposals, Pagination: pageRes}, nil
+	return &types.QueryProposals2Response{Proposals: filteredProposals, Pagination: pageRes}, nil
 }

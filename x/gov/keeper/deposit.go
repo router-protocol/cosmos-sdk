@@ -166,11 +166,11 @@ func (keeper Keeper) AddDeposit(ctx sdk.Context, proposalID uint64, depositorAdd
 	return activatedVotingPeriod, nil
 }
 
-// AddDepositV2 adds or updates a deposit of a specific depositor on a specific V2 proposal
+// AddDeposit2 adds or updates a deposit of a specific depositor on a specific 2 proposal
 // Activates voting period when appropriate
-func (keeper Keeper) AddDepositV2(ctx sdk.Context, proposalID uint64, depositorAddr sdk.AccAddress, depositAmount sdk.Coins) (bool, error) {
+func (keeper Keeper) AddDeposit2(ctx sdk.Context, proposalID uint64, depositorAddr sdk.AccAddress, depositAmount sdk.Coins) (bool, error) {
 	// Checks to see if proposal exists
-	proposal, ok := keeper.GetProposalV2(ctx, proposalID)
+	proposal, ok := keeper.GetProposal2(ctx, proposalID)
 	if !ok {
 		return false, sdkerrors.Wrapf(types.ErrUnknownProposal, "%d", proposalID)
 	}
@@ -188,13 +188,13 @@ func (keeper Keeper) AddDepositV2(ctx sdk.Context, proposalID uint64, depositorA
 
 	// Update proposal
 	proposal.TotalDeposit = proposal.TotalDeposit.Add(depositAmount...)
-	keeper.SetProposalV2(ctx, proposal)
+	keeper.SetProposal2(ctx, proposal)
 
 	// Check if deposit has provided sufficient total funds to transition the proposal into the voting period
 	activatedVotingPeriod := false
 
 	if proposal.Status == types.StatusDepositPeriod && proposal.TotalDeposit.IsAllGTE(keeper.GetDepositParams(ctx).MinDeposit) {
-		keeper.ActivateVotingPeriodV2(ctx, proposal)
+		keeper.ActivateVotingPeriod2(ctx, proposal)
 
 		activatedVotingPeriod = true
 	}

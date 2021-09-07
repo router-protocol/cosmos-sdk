@@ -41,14 +41,14 @@ func InitGenesis(ctx sdk.Context, ak types.AccountKeeper, bk types.BankKeeper, k
 		k.SetProposal(ctx, proposal)
 	}
 
-	for _, proposalV2 := range data.ProposalsV2 {
-		switch proposalV2.Status {
+	for _, proposal2 := range data.Proposals_2 {
+		switch proposal2.Status {
 		case types.StatusDepositPeriod:
-			k.InsertInactiveProposalQueue(ctx, proposalV2.ProposalId, proposalV2.DepositEndTime)
+			k.InsertInactiveProposalQueue(ctx, proposal2.ProposalId, proposal2.DepositEndTime)
 		case types.StatusVotingPeriod:
-			k.InsertActiveProposalQueue(ctx, proposalV2.ProposalId, proposalV2.VotingEndTime)
+			k.InsertActiveProposalQueue(ctx, proposal2.ProposalId, proposal2.VotingEndTime)
 		}
-		k.SetProposalV2(ctx, proposalV2)
+		k.SetProposal2(ctx, proposal2)
 	}
 
 	// if account has zero balance it probably means it's not set, so we set it
@@ -70,7 +70,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	votingParams := k.GetVotingParams(ctx)
 	tallyParams := k.GetTallyParams(ctx)
 	proposals := k.GetProposals(ctx)
-	proposalsV2 := k.GetProposalsV2(ctx)
+	proposals2 := k.GetProposals2(ctx)
 
 	var proposalsDeposits types.Deposits
 	var proposalsVotes types.Votes
@@ -82,11 +82,11 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 		proposalsVotes = append(proposalsVotes, votes...)
 	}
 
-	for _, proposalV2 := range proposalsV2 {
-		deposits := k.GetDeposits(ctx, proposalV2.ProposalId)
+	for _, proposal2 := range proposals2 {
+		deposits := k.GetDeposits(ctx, proposal2.ProposalId)
 		proposalsDeposits = append(proposalsDeposits, deposits...)
 
-		votes := k.GetVotes(ctx, proposalV2.ProposalId)
+		votes := k.GetVotes(ctx, proposal2.ProposalId)
 		proposalsVotes = append(proposalsVotes, votes...)
 	}
 
@@ -98,6 +98,6 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 		DepositParams:      depositParams,
 		VotingParams:       votingParams,
 		TallyParams:        tallyParams,
-		ProposalsV2:        proposalsV2,
+		Proposals_2:        proposals2,
 	}
 }

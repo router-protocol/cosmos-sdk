@@ -93,7 +93,7 @@ func TestVotes(t *testing.T) {
 	require.Equal(t, types.OptionEmpty, vote.Option)
 }
 
-func TestVotesV2(t *testing.T) {
+func TestVotes2(t *testing.T) {
 	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
@@ -102,19 +102,19 @@ func TestVotesV2(t *testing.T) {
 	govAccount := app.GovKeeper.GetGovernanceAccount(ctx)
 	// Proposal is for the gov module to vote on another proposal :)
 	proposalMsgs := []sdk.Msg{types.NewMsgVote(govAccount.GetAddress(), 0, types.OptionYes)}
-	proposal, err := app.GovKeeper.SubmitProposalV2(ctx, proposalMsgs)
+	proposal, err := app.GovKeeper.SubmitProposal2(ctx, proposalMsgs)
 	require.NoError(t, err)
 	proposalID := proposal.ProposalId
 
 	var invalidOption types.VoteOption = 0x10
 
 	proposal.Status = types.StatusVotingPeriod
-	app.GovKeeper.SetProposalV2(ctx, proposal)
+	app.GovKeeper.SetProposal2(ctx, proposal)
 
-	require.Error(t, app.GovKeeper.AddVoteV2(ctx, proposalID, addrs[0], types.NewNonSplitVoteOption(invalidOption)), "invalid option")
+	require.Error(t, app.GovKeeper.AddVote2(ctx, proposalID, addrs[0], types.NewNonSplitVoteOption(invalidOption)), "invalid option")
 
 	// Test first vote
-	require.NoError(t, app.GovKeeper.AddVoteV2(ctx, proposalID, addrs[0], types.NewNonSplitVoteOption(types.OptionAbstain)))
+	require.NoError(t, app.GovKeeper.AddVote2(ctx, proposalID, addrs[0], types.NewNonSplitVoteOption(types.OptionAbstain)))
 	vote, found := app.GovKeeper.GetVote(ctx, proposalID, addrs[0])
 	require.True(t, found)
 	require.Equal(t, addrs[0].String(), vote.Voter)

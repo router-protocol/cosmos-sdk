@@ -59,13 +59,13 @@ func TestMsgSubmitProposal(t *testing.T) {
 	}
 }
 
-func TestMsgSubmitProposalV2(t *testing.T) {
+func TestMsgSubmitProposal2(t *testing.T) {
 	proposalMsgs := []sdk.Msg{NewMsgVote(addrs[0], 0, OptionYes)}
-	msg, err := NewMsgSubmitProposalV2(proposalMsgs, coinsPos, addrs[0])
+	msg, err := NewMsgSubmitProposal2(proposalMsgs, coinsPos, addrs[0])
 	require.NoError(t, err)
 	require.NoError(t, msg.ValidateBasic())
 
-	msg, err = NewMsgSubmitProposalV2([]sdk.Msg{}, coinsPos, addrs[0])
+	msg, err = NewMsgSubmitProposal2([]sdk.Msg{}, coinsPos, addrs[0])
 	require.NoError(t, err)
 	require.Error(t, msg.ValidateBasic())
 }
@@ -188,7 +188,7 @@ func TestMsgSubmitProposal_GetSignBytes(t *testing.T) {
 
 func TestMsgSubmitProposal2_GetSignBytes(t *testing.T) {
 	proposalMsgs := []sdk.Msg{NewMsgVote(addrs[0], 0, OptionYes)}
-	msg, err := NewMsgSubmitProposalV2(proposalMsgs, sdk.NewCoins(), sdk.AccAddress{})
+	msg, err := NewMsgSubmitProposal2(proposalMsgs, sdk.NewCoins(), sdk.AccAddress{})
 	require.NoError(t, err)
 	var bz []byte
 	require.NotPanics(t, func() {

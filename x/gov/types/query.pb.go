@@ -76,24 +76,24 @@ func (m *QueryProposalRequest) GetProposalId() uint64 {
 	return 0
 }
 
-// QueryProposalV2Request is the request type for the Query/ProposalV2 RPC method.
-type QueryProposalV2Request struct {
+// QueryProposal2Request is the request type for the Query/Proposal2 RPC method.
+type QueryProposal2Request struct {
 	// proposal_id defines the unique id of the proposal.
 	ProposalId uint64 `protobuf:"varint,1,opt,name=proposal_id,json=proposalId,proto3" json:"proposal_id,omitempty"`
 }
 
-func (m *QueryProposalV2Request) Reset()         { *m = QueryProposalV2Request{} }
-func (m *QueryProposalV2Request) String() string { return proto.CompactTextString(m) }
-func (*QueryProposalV2Request) ProtoMessage()    {}
-func (*QueryProposalV2Request) Descriptor() ([]byte, []int) {
+func (m *QueryProposal2Request) Reset()         { *m = QueryProposal2Request{} }
+func (m *QueryProposal2Request) String() string { return proto.CompactTextString(m) }
+func (*QueryProposal2Request) ProtoMessage()    {}
+func (*QueryProposal2Request) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e35c0d133e91c0a2, []int{1}
 }
-func (m *QueryProposalV2Request) XXX_Unmarshal(b []byte) error {
+func (m *QueryProposal2Request) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryProposalV2Request) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryProposal2Request) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryProposalV2Request.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryProposal2Request.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -103,19 +103,19 @@ func (m *QueryProposalV2Request) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-func (m *QueryProposalV2Request) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryProposalV2Request.Merge(m, src)
+func (m *QueryProposal2Request) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryProposal2Request.Merge(m, src)
 }
-func (m *QueryProposalV2Request) XXX_Size() int {
+func (m *QueryProposal2Request) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryProposalV2Request) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryProposalV2Request.DiscardUnknown(m)
+func (m *QueryProposal2Request) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryProposal2Request.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryProposalV2Request proto.InternalMessageInfo
+var xxx_messageInfo_QueryProposal2Request proto.InternalMessageInfo
 
-func (m *QueryProposalV2Request) GetProposalId() uint64 {
+func (m *QueryProposal2Request) GetProposalId() uint64 {
 	if m != nil {
 		return m.ProposalId
 	}
@@ -167,23 +167,23 @@ func (m *QueryProposalResponse) GetProposal() Proposal {
 	return Proposal{}
 }
 
-// QueryProposalV2Response is the response type for the Query/ProposalV2 RPC method.
-type QueryProposalV2Response struct {
-	Proposal ProposalV2 `protobuf:"bytes,1,opt,name=proposal,proto3" json:"proposal"`
+// QueryProposal2Response is the response type for the Query/Proposal2 RPC method.
+type QueryProposal2Response struct {
+	Proposal Proposal2 `protobuf:"bytes,1,opt,name=proposal,proto3" json:"proposal"`
 }
 
-func (m *QueryProposalV2Response) Reset()         { *m = QueryProposalV2Response{} }
-func (m *QueryProposalV2Response) String() string { return proto.CompactTextString(m) }
-func (*QueryProposalV2Response) ProtoMessage()    {}
-func (*QueryProposalV2Response) Descriptor() ([]byte, []int) {
+func (m *QueryProposal2Response) Reset()         { *m = QueryProposal2Response{} }
+func (m *QueryProposal2Response) String() string { return proto.CompactTextString(m) }
+func (*QueryProposal2Response) ProtoMessage()    {}
+func (*QueryProposal2Response) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e35c0d133e91c0a2, []int{3}
 }
-func (m *QueryProposalV2Response) XXX_Unmarshal(b []byte) error {
+func (m *QueryProposal2Response) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryProposalV2Response) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryProposal2Response) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryProposalV2Response.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryProposal2Response.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -193,23 +193,23 @@ func (m *QueryProposalV2Response) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *QueryProposalV2Response) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryProposalV2Response.Merge(m, src)
+func (m *QueryProposal2Response) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryProposal2Response.Merge(m, src)
 }
-func (m *QueryProposalV2Response) XXX_Size() int {
+func (m *QueryProposal2Response) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryProposalV2Response) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryProposalV2Response.DiscardUnknown(m)
+func (m *QueryProposal2Response) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryProposal2Response.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryProposalV2Response proto.InternalMessageInfo
+var xxx_messageInfo_QueryProposal2Response proto.InternalMessageInfo
 
-func (m *QueryProposalV2Response) GetProposal() ProposalV2 {
+func (m *QueryProposal2Response) GetProposal() Proposal2 {
 	if m != nil {
 		return m.Proposal
 	}
-	return ProposalV2{}
+	return Proposal2{}
 }
 
 // QueryProposalsRequest is the request type for the Query/Proposals RPC method.
@@ -312,8 +312,8 @@ func (m *QueryProposalsResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-// QueryProposalsV2Request is the request type for the Query/ProposalsV2 RPC method.
-type QueryProposalsV2Request struct {
+// QueryProposals2Request is the request type for the Query/Proposals2 RPC method.
+type QueryProposals2Request struct {
 	// proposal_status defines the status of the proposals.
 	ProposalStatus ProposalStatus `protobuf:"varint,1,opt,name=proposal_status,json=proposalStatus,proto3,enum=cosmos.gov.v1beta1.ProposalStatus" json:"proposal_status,omitempty"`
 	// voter defines the voter address for the proposals.
@@ -324,18 +324,18 @@ type QueryProposalsV2Request struct {
 	Pagination *query.PageRequest `protobuf:"bytes,4,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryProposalsV2Request) Reset()         { *m = QueryProposalsV2Request{} }
-func (m *QueryProposalsV2Request) String() string { return proto.CompactTextString(m) }
-func (*QueryProposalsV2Request) ProtoMessage()    {}
-func (*QueryProposalsV2Request) Descriptor() ([]byte, []int) {
+func (m *QueryProposals2Request) Reset()         { *m = QueryProposals2Request{} }
+func (m *QueryProposals2Request) String() string { return proto.CompactTextString(m) }
+func (*QueryProposals2Request) ProtoMessage()    {}
+func (*QueryProposals2Request) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e35c0d133e91c0a2, []int{6}
 }
-func (m *QueryProposalsV2Request) XXX_Unmarshal(b []byte) error {
+func (m *QueryProposals2Request) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryProposalsV2Request) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryProposals2Request) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryProposalsV2Request.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryProposals2Request.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -345,38 +345,38 @@ func (m *QueryProposalsV2Request) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *QueryProposalsV2Request) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryProposalsV2Request.Merge(m, src)
+func (m *QueryProposals2Request) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryProposals2Request.Merge(m, src)
 }
-func (m *QueryProposalsV2Request) XXX_Size() int {
+func (m *QueryProposals2Request) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryProposalsV2Request) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryProposalsV2Request.DiscardUnknown(m)
+func (m *QueryProposals2Request) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryProposals2Request.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryProposalsV2Request proto.InternalMessageInfo
+var xxx_messageInfo_QueryProposals2Request proto.InternalMessageInfo
 
-// QueryProposalsV2Response is the response type for the Query/ProposalsV2 RPC
+// QueryProposals2Response is the response type for the Query/Proposals2 RPC
 // method.
-type QueryProposalsV2Response struct {
-	Proposals []ProposalV2 `protobuf:"bytes,1,rep,name=proposals,proto3" json:"proposals"`
+type QueryProposals2Response struct {
+	Proposals []Proposal2 `protobuf:"bytes,1,rep,name=proposals,proto3" json:"proposals"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryProposalsV2Response) Reset()         { *m = QueryProposalsV2Response{} }
-func (m *QueryProposalsV2Response) String() string { return proto.CompactTextString(m) }
-func (*QueryProposalsV2Response) ProtoMessage()    {}
-func (*QueryProposalsV2Response) Descriptor() ([]byte, []int) {
+func (m *QueryProposals2Response) Reset()         { *m = QueryProposals2Response{} }
+func (m *QueryProposals2Response) String() string { return proto.CompactTextString(m) }
+func (*QueryProposals2Response) ProtoMessage()    {}
+func (*QueryProposals2Response) Descriptor() ([]byte, []int) {
 	return fileDescriptor_e35c0d133e91c0a2, []int{7}
 }
-func (m *QueryProposalsV2Response) XXX_Unmarshal(b []byte) error {
+func (m *QueryProposals2Response) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryProposalsV2Response) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryProposals2Response) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryProposalsV2Response.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryProposals2Response.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -386,26 +386,26 @@ func (m *QueryProposalsV2Response) XXX_Marshal(b []byte, deterministic bool) ([]
 		return b[:n], nil
 	}
 }
-func (m *QueryProposalsV2Response) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryProposalsV2Response.Merge(m, src)
+func (m *QueryProposals2Response) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryProposals2Response.Merge(m, src)
 }
-func (m *QueryProposalsV2Response) XXX_Size() int {
+func (m *QueryProposals2Response) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryProposalsV2Response) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryProposalsV2Response.DiscardUnknown(m)
+func (m *QueryProposals2Response) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryProposals2Response.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryProposalsV2Response proto.InternalMessageInfo
+var xxx_messageInfo_QueryProposals2Response proto.InternalMessageInfo
 
-func (m *QueryProposalsV2Response) GetProposals() []ProposalV2 {
+func (m *QueryProposals2Response) GetProposals() []Proposal2 {
 	if m != nil {
 		return m.Proposals
 	}
 	return nil
 }
 
-func (m *QueryProposalsV2Response) GetPagination() *query.PageResponse {
+func (m *QueryProposals2Response) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
@@ -1010,13 +1010,13 @@ func (m *QueryTallyResultResponse) GetTally() TallyResult {
 
 func init() {
 	proto.RegisterType((*QueryProposalRequest)(nil), "cosmos.gov.v1beta1.QueryProposalRequest")
-	proto.RegisterType((*QueryProposalV2Request)(nil), "cosmos.gov.v1beta1.QueryProposalV2Request")
+	proto.RegisterType((*QueryProposal2Request)(nil), "cosmos.gov.v1beta1.QueryProposal2Request")
 	proto.RegisterType((*QueryProposalResponse)(nil), "cosmos.gov.v1beta1.QueryProposalResponse")
-	proto.RegisterType((*QueryProposalV2Response)(nil), "cosmos.gov.v1beta1.QueryProposalV2Response")
+	proto.RegisterType((*QueryProposal2Response)(nil), "cosmos.gov.v1beta1.QueryProposal2Response")
 	proto.RegisterType((*QueryProposalsRequest)(nil), "cosmos.gov.v1beta1.QueryProposalsRequest")
 	proto.RegisterType((*QueryProposalsResponse)(nil), "cosmos.gov.v1beta1.QueryProposalsResponse")
-	proto.RegisterType((*QueryProposalsV2Request)(nil), "cosmos.gov.v1beta1.QueryProposalsV2Request")
-	proto.RegisterType((*QueryProposalsV2Response)(nil), "cosmos.gov.v1beta1.QueryProposalsV2Response")
+	proto.RegisterType((*QueryProposals2Request)(nil), "cosmos.gov.v1beta1.QueryProposals2Request")
+	proto.RegisterType((*QueryProposals2Response)(nil), "cosmos.gov.v1beta1.QueryProposals2Response")
 	proto.RegisterType((*QueryVoteRequest)(nil), "cosmos.gov.v1beta1.QueryVoteRequest")
 	proto.RegisterType((*QueryVoteResponse)(nil), "cosmos.gov.v1beta1.QueryVoteResponse")
 	proto.RegisterType((*QueryVotesRequest)(nil), "cosmos.gov.v1beta1.QueryVotesRequest")
@@ -1034,74 +1034,74 @@ func init() {
 func init() { proto.RegisterFile("cosmos/gov/v1beta1/query.proto", fileDescriptor_e35c0d133e91c0a2) }
 
 var fileDescriptor_e35c0d133e91c0a2 = []byte{
-	// 1070 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x57, 0xcf, 0x6f, 0x1b, 0x45,
-	0x14, 0xf6, 0x24, 0x4e, 0x6b, 0x3f, 0xa7, 0x01, 0x1e, 0x01, 0xac, 0x25, 0xd8, 0xe9, 0x8a, 0x36,
-	0x26, 0x25, 0x5e, 0xe2, 0xb4, 0xa0, 0xb4, 0x80, 0x8a, 0x85, 0xda, 0xa2, 0x4a, 0xa8, 0x38, 0x55,
-	0x90, 0x40, 0x22, 0xda, 0xd4, 0xab, 0xc5, 0xc2, 0xf1, 0x6c, 0x3d, 0x6b, 0x8b, 0x28, 0x44, 0x48,
-	0x5c, 0x00, 0x71, 0x01, 0x15, 0x71, 0x02, 0x51, 0xa9, 0x12, 0xfc, 0x2b, 0x3d, 0x56, 0xe2, 0xc2,
-	0x09, 0xa1, 0x84, 0x03, 0x42, 0xfc, 0x09, 0x1c, 0xd0, 0xce, 0xbe, 0x59, 0xef, 0xda, 0x6b, 0xef,
-	0x26, 0x2a, 0x1c, 0x7a, 0x8a, 0x77, 0xe6, 0xfd, 0xf8, 0xbe, 0xf7, 0xde, 0xcc, 0x37, 0x81, 0xd2,
-	0x2d, 0x2e, 0x76, 0xb8, 0x30, 0x6c, 0xde, 0x37, 0xfa, 0xab, 0xdb, 0x96, 0x6b, 0xae, 0x1a, 0xb7,
-	0x7b, 0x56, 0x77, 0xb7, 0xea, 0x74, 0xb9, 0xcb, 0x11, 0xfd, 0xfd, 0xaa, 0xcd, 0xfb, 0x55, 0xda,
-	0xd7, 0x96, 0xc9, 0x67, 0xdb, 0x14, 0x96, 0x6f, 0x1c, 0xb8, 0x3a, 0xa6, 0xdd, 0xea, 0x98, 0x6e,
-	0x8b, 0x77, 0x7c, 0x7f, 0x6d, 0xde, 0xe6, 0x36, 0x97, 0x3f, 0x0d, 0xef, 0x17, 0xad, 0x2e, 0xd8,
-	0x9c, 0xdb, 0x6d, 0xcb, 0x30, 0x9d, 0x96, 0x61, 0x76, 0x3a, 0xdc, 0x95, 0x2e, 0x42, 0xed, 0xc6,
-	0x60, 0xf2, 0xf2, 0xcb, 0x5d, 0xfd, 0x15, 0x98, 0x7f, 0xc7, 0xcb, 0x79, 0xa3, 0xcb, 0x1d, 0x2e,
-	0xcc, 0x76, 0xc3, 0xba, 0xdd, 0xb3, 0x84, 0x8b, 0x65, 0x28, 0x38, 0xb4, 0xb4, 0xd5, 0x6a, 0x16,
-	0xd9, 0x22, 0xab, 0x64, 0x1b, 0xa0, 0x96, 0xde, 0x6a, 0xea, 0xeb, 0xf0, 0x74, 0xc4, 0x71, 0xb3,
-	0x96, 0xda, 0xf5, 0x5d, 0x78, 0x6a, 0x28, 0xa7, 0x70, 0x78, 0x47, 0x58, 0xf8, 0x3a, 0xe4, 0x94,
-	0x99, 0x74, 0x2b, 0xd4, 0x16, 0xaa, 0xa3, 0x15, 0xab, 0x2a, 0xbf, 0x7a, 0xf6, 0xfe, 0x6f, 0xe5,
-	0x4c, 0x23, 0xf0, 0xd1, 0xdf, 0x87, 0x67, 0x46, 0x30, 0x51, 0xe8, 0xcb, 0x23, 0xa1, 0x4b, 0x93,
-	0x42, 0x6f, 0xd6, 0x46, 0x82, 0xff, 0xc5, 0x86, 0x60, 0x0b, 0x45, 0xf8, 0x3a, 0x3c, 0x16, 0x10,
-	0x16, 0xae, 0xe9, 0xf6, 0x84, 0x4c, 0x31, 0x57, 0xd3, 0x27, 0xa5, 0xd8, 0x90, 0x96, 0x8d, 0x39,
-	0x27, 0xf2, 0x8d, 0xf3, 0x30, 0xd3, 0xe7, 0xae, 0xd5, 0x2d, 0x4e, 0x2d, 0xb2, 0x4a, 0xbe, 0xe1,
-	0x7f, 0xe0, 0x02, 0xe4, 0x9b, 0x96, 0xc3, 0x45, 0xcb, 0xe5, 0xdd, 0xe2, 0xb4, 0xdc, 0x19, 0x2c,
-	0xe0, 0x15, 0x80, 0xc1, 0xa8, 0x14, 0xb3, 0x92, 0xde, 0x59, 0x95, 0xdb, 0x9b, 0xab, 0xaa, 0x3f,
-	0x84, 0x01, 0x04, 0xd3, 0xb6, 0x08, 0x7c, 0x23, 0xe4, 0x79, 0x31, 0xf7, 0xc5, 0xdd, 0x72, 0xe6,
-	0xcf, 0xbb, 0xe5, 0x8c, 0x7e, 0x8f, 0x0d, 0xb5, 0x57, 0x84, 0x2a, 0x99, 0x57, 0x90, 0x3d, 0x9e,
-	0xd3, 0x29, 0xbb, 0x34, 0x70, 0xc2, 0xab, 0x11, 0xb8, 0x53, 0x12, 0xee, 0x52, 0x22, 0x5c, 0x3f,
-	0x7d, 0x18, 0xaf, 0xfe, 0x37, 0x1b, 0x6a, 0xb8, 0x18, 0x4c, 0xe1, 0x23, 0xd8, 0x94, 0x9f, 0x19,
-	0x14, 0x47, 0xe9, 0x52, 0x5b, 0xea, 0xa3, 0x6d, 0x49, 0x37, 0xe1, 0xff, 0x45, 0x63, 0x36, 0xe0,
-	0x71, 0x09, 0x74, 0x93, 0xbb, 0x56, 0xda, 0x6b, 0x21, 0xbe, 0xc8, 0x21, 0xfa, 0x57, 0xe1, 0x89,
-	0x50, 0x50, 0xa2, 0x5d, 0x83, 0xac, 0x67, 0x47, 0x67, 0xba, 0x18, 0xc7, 0xd8, 0xb3, 0x27, 0xae,
-	0xd2, 0x56, 0xff, 0x24, 0x14, 0x48, 0xa4, 0x86, 0x77, 0x25, 0xa6, 0x38, 0xc7, 0xe8, 0xa7, 0x7e,
-	0x87, 0x01, 0x86, 0xd3, 0x13, 0x91, 0xf3, 0x3e, 0x7b, 0xd5, 0xbb, 0x24, 0x26, 0xbe, 0xf1, 0xc3,
-	0xeb, 0xd8, 0x05, 0x02, 0x75, 0xc3, 0xec, 0x9a, 0x3b, 0x91, 0xa2, 0xc8, 0x85, 0x2d, 0x77, 0xd7,
-	0xf1, 0x8b, 0x9c, 0xf7, 0xdc, 0xbc, 0xa5, 0x9b, 0xbb, 0x8e, 0xa5, 0xff, 0xc3, 0xe0, 0xc9, 0x88,
-	0x1f, 0xb1, 0xb9, 0x0e, 0xa7, 0xfa, 0xdc, 0x6d, 0x75, 0xec, 0x2d, 0xdf, 0x98, 0xfa, 0xb3, 0x38,
-	0x86, 0x55, 0xab, 0x63, 0xfb, 0x01, 0x88, 0xdd, 0x6c, 0x3f, 0xb4, 0x86, 0x6f, 0xc3, 0x1c, 0x1d,
-	0x2b, 0x15, 0xcd, 0x27, 0x7a, 0x3a, 0x2e, 0xda, 0x9b, 0xbe, 0x65, 0x24, 0xdc, 0xa9, 0x66, 0x78,
-	0x11, 0xaf, 0xc1, 0xac, 0x6b, 0xb6, 0xdb, 0xbb, 0x2a, 0xda, 0xb4, 0x8c, 0x56, 0x8e, 0x8b, 0x76,
-	0xd3, 0xb3, 0x8b, 0xc4, 0x2a, 0xb8, 0x83, 0x25, 0xfd, 0x03, 0x62, 0x4f, 0x49, 0x53, 0xcf, 0x52,
-	0xe4, 0xe6, 0x98, 0x1a, 0xba, 0x39, 0x42, 0x23, 0xbf, 0x41, 0xea, 0x1c, 0xc4, 0xa7, 0xf2, 0x5e,
-	0x82, 0x93, 0x64, 0x4e, 0x85, 0x7d, 0x76, 0x42, 0x29, 0x08, 0xb8, 0xf2, 0xd0, 0x3f, 0x8d, 0x06,
-	0xfd, 0xff, 0x4f, 0xc0, 0x8f, 0x4a, 0x49, 0x07, 0x08, 0x88, 0xd7, 0x6b, 0x90, 0x23, 0x94, 0xea,
-	0x1c, 0xa4, 0x20, 0x16, 0xb8, 0x3c, 0xbc, 0xd3, 0x70, 0x91, 0x74, 0x45, 0xb6, 0xbf, 0x61, 0x89,
-	0x5e, 0xdb, 0x3d, 0xc2, 0xeb, 0xa6, 0x38, 0xea, 0x1b, 0xf4, 0x6d, 0x46, 0x8e, 0x0f, 0x75, 0x6d,
-	0xfc, 0xc8, 0xf9, 0x7e, 0xea, 0xac, 0x4b, 0x9f, 0xda, 0xe7, 0xb3, 0x30, 0x23, 0x23, 0xe3, 0xb7,
-	0x0c, 0x72, 0xea, 0x1e, 0xc7, 0x4a, 0x5c, 0x90, 0xb8, 0x37, 0x9d, 0xf6, 0x42, 0x0a, 0x4b, 0x1f,
-	0xa8, 0xbe, 0xf6, 0xd9, 0x2f, 0x7f, 0xdc, 0x99, 0x5a, 0xc1, 0x73, 0x46, 0xcc, 0xeb, 0x31, 0x10,
-	0x0c, 0x63, 0x2f, 0x54, 0x8a, 0x7d, 0xfc, 0x9e, 0x01, 0x0c, 0xe4, 0x05, 0x97, 0x13, 0xd3, 0x05,
-	0x6a, 0xad, 0x9d, 0x4b, 0x65, 0x4b, 0xe0, 0x2e, 0x48, 0x70, 0x06, 0xae, 0x4c, 0x04, 0xb7, 0x59,
-	0x1b, 0x82, 0xf7, 0x25, 0x83, 0x7c, 0xa0, 0x9c, 0x98, 0x5c, 0x0c, 0x75, 0x30, 0xb4, 0xe5, 0x34,
-	0xa6, 0x84, 0xed, 0x8c, 0xc4, 0x56, 0xc6, 0xe7, 0x26, 0x62, 0xc3, 0x6f, 0x18, 0x14, 0x42, 0x2a,
-	0x8e, 0xc9, 0xfc, 0x07, 0x4f, 0x1b, 0xed, 0xc5, 0x74, 0xc6, 0x84, 0x68, 0x49, 0x22, 0x3a, 0x8d,
-	0xe5, 0x84, 0x6a, 0xe1, 0x77, 0x0c, 0xb2, 0x9e, 0xc2, 0xe0, 0xf3, 0x63, 0xe3, 0x87, 0xf4, 0x5c,
-	0x3b, 0x93, 0x60, 0x45, 0xe9, 0xdf, 0x90, 0xe9, 0x2f, 0xe1, 0xfa, 0x11, 0x26, 0xc9, 0x90, 0xe2,
-	0x66, 0xec, 0xc9, 0x17, 0xc0, 0xbe, 0x57, 0xac, 0x19, 0x29, 0x96, 0x38, 0x39, 0x67, 0xd0, 0xb0,
-	0xb3, 0x49, 0x66, 0x84, 0x6d, 0x5d, 0x62, 0x5b, 0xc3, 0xd5, 0x23, 0x63, 0xc3, 0xaf, 0x18, 0x9c,
-	0x20, 0x39, 0x19, 0x9f, 0x2d, 0x22, 0xa6, 0xda, 0x52, 0xa2, 0x1d, 0xc1, 0x7a, 0x49, 0xc2, 0x5a,
-	0xc6, 0x4a, 0x2c, 0x2c, 0x69, 0x6b, 0xec, 0x85, 0x74, 0x79, 0x1f, 0x7f, 0x62, 0x70, 0x92, 0x2e,
-	0x45, 0x1c, 0x9f, 0x26, 0xaa, 0x52, 0x5a, 0x25, 0xd9, 0x90, 0x00, 0x5d, 0x93, 0x80, 0xea, 0x78,
-	0xf9, 0x28, 0x75, 0x52, 0xb7, 0xb2, 0xb1, 0x17, 0x28, 0xdb, 0x3e, 0xfe, 0xc0, 0x20, 0xa7, 0x6e,
-	0x7d, 0x4c, 0x04, 0x20, 0x92, 0x6f, 0xae, 0x61, 0x09, 0xd1, 0x5f, 0x95, 0x58, 0x5f, 0xc6, 0xf3,
-	0xc7, 0xc1, 0x8a, 0xf7, 0x18, 0x14, 0x42, 0x17, 0xf0, 0x84, 0x73, 0x39, 0x2a, 0x0d, 0x13, 0xce,
-	0x65, 0x8c, 0x16, 0x1c, 0x6f, 0xf8, 0xa4, 0x12, 0xd4, 0xeb, 0xf7, 0x0f, 0x4a, 0xec, 0xc1, 0x41,
-	0x89, 0xfd, 0x7e, 0x50, 0x62, 0x5f, 0x1f, 0x96, 0x32, 0x0f, 0x0e, 0x4b, 0x99, 0x5f, 0x0f, 0x4b,
-	0x99, 0xf7, 0x2a, 0x76, 0xcb, 0xfd, 0xb0, 0xb7, 0x5d, 0xbd, 0xc5, 0x77, 0x54, 0x58, 0xff, 0xcf,
-	0x8a, 0x68, 0x7e, 0x64, 0x7c, 0x2c, 0x73, 0x78, 0x23, 0x23, 0xb6, 0x4f, 0xc8, 0xff, 0xff, 0xd7,
-	0xfe, 0x0d, 0x00, 0x00, 0xff, 0xff, 0x50, 0xaf, 0x5a, 0x54, 0xb3, 0x10, 0x00, 0x00,
+	// 1059 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x97, 0xcd, 0x6f, 0x1b, 0x45,
+	0x14, 0xc0, 0x3d, 0x89, 0xd3, 0xda, 0xcf, 0x6d, 0x80, 0x47, 0x00, 0xcb, 0xa4, 0x76, 0x58, 0xd1,
+	0xd4, 0xa4, 0xad, 0x97, 0x38, 0xe1, 0xa3, 0x2d, 0x1f, 0x6d, 0x84, 0xda, 0xa2, 0x4a, 0xa8, 0x38,
+	0x15, 0x08, 0x0e, 0x44, 0x9b, 0x7a, 0xb5, 0x58, 0x38, 0x9e, 0xad, 0x67, 0x6d, 0x11, 0x85, 0x08,
+	0x89, 0x13, 0x08, 0x21, 0x81, 0x8a, 0x10, 0x17, 0x44, 0xa5, 0x0a, 0xfe, 0x96, 0x1e, 0x2b, 0x71,
+	0xe1, 0x84, 0x50, 0xc2, 0x01, 0xc1, 0xbf, 0x80, 0x04, 0xda, 0x99, 0x37, 0xeb, 0x5d, 0x7b, 0xed,
+	0xdd, 0x94, 0xc2, 0xa1, 0xa7, 0xd8, 0x33, 0xef, 0xe3, 0xf7, 0x3e, 0xe6, 0x3d, 0x07, 0xca, 0xd7,
+	0xb9, 0xd8, 0xe2, 0xc2, 0x74, 0x78, 0xdf, 0xec, 0x2f, 0x6f, 0xda, 0x9e, 0xb5, 0x6c, 0xde, 0xe8,
+	0xd9, 0xdd, 0xed, 0x9a, 0xdb, 0xe5, 0x1e, 0x47, 0x54, 0xf7, 0x35, 0x87, 0xf7, 0x6b, 0x74, 0x5f,
+	0x5a, 0x22, 0x9d, 0x4d, 0x4b, 0xd8, 0x4a, 0x38, 0x50, 0x75, 0x2d, 0xa7, 0xd5, 0xb1, 0xbc, 0x16,
+	0xef, 0x28, 0xfd, 0xd2, 0x9c, 0xc3, 0x1d, 0x2e, 0x3f, 0x9a, 0xfe, 0x27, 0x3a, 0x9d, 0x77, 0x38,
+	0x77, 0xda, 0xb6, 0x69, 0xb9, 0x2d, 0xd3, 0xea, 0x74, 0xb8, 0x27, 0x55, 0x84, 0xbe, 0x8d, 0x61,
+	0xf2, 0xfd, 0xcb, 0x5b, 0xe3, 0x05, 0x98, 0x7b, 0xd3, 0xf7, 0x79, 0xb5, 0xcb, 0x5d, 0x2e, 0xac,
+	0x76, 0xc3, 0xbe, 0xd1, 0xb3, 0x85, 0x87, 0x15, 0x28, 0xb8, 0x74, 0xb4, 0xd1, 0x6a, 0x16, 0xd9,
+	0x02, 0xab, 0x66, 0x1b, 0xa0, 0x8f, 0x5e, 0x6f, 0x1a, 0x2f, 0xc2, 0x63, 0x11, 0xc5, 0x7a, 0x6a,
+	0xcd, 0xb7, 0x87, 0x34, 0x1b, 0xb6, 0x70, 0x79, 0x47, 0xd8, 0xf8, 0x0a, 0xe4, 0xb4, 0x98, 0x54,
+	0x2b, 0xd4, 0xe7, 0x6b, 0xa3, 0x09, 0xab, 0x69, 0xbd, 0xb5, 0xec, 0x9d, 0x5f, 0x2a, 0x99, 0x46,
+	0xa0, 0x63, 0xbc, 0x03, 0x8f, 0x0f, 0x23, 0x91, 0xe5, 0x57, 0x47, 0x2c, 0x1f, 0x9b, 0x64, 0xb9,
+	0x3e, 0x62, 0xfa, 0x0f, 0x36, 0x04, 0x2d, 0x74, 0xb8, 0x57, 0xe0, 0xa1, 0x20, 0x5c, 0xe1, 0x59,
+	0x5e, 0x4f, 0x48, 0x0f, 0xb3, 0x75, 0x63, 0x92, 0x87, 0x75, 0x29, 0xd9, 0x98, 0x75, 0x23, 0xdf,
+	0x71, 0x0e, 0x66, 0xfa, 0xdc, 0xb3, 0xbb, 0xc5, 0xa9, 0x05, 0x56, 0xcd, 0x37, 0xd4, 0x17, 0x9c,
+	0x87, 0x7c, 0xd3, 0x76, 0xb9, 0x68, 0x79, 0xbc, 0x5b, 0x9c, 0x96, 0x37, 0x83, 0x03, 0xbc, 0x08,
+	0x30, 0xe8, 0x93, 0x62, 0x56, 0x46, 0xb7, 0xa8, 0x7d, 0xfb, 0x4d, 0x55, 0x53, 0x1d, 0x18, 0x20,
+	0x58, 0x8e, 0x4d, 0xf0, 0x8d, 0x90, 0xe6, 0xd9, 0xdc, 0xa7, 0xb7, 0x2a, 0x99, 0xdf, 0x6f, 0x55,
+	0x32, 0xc6, 0x6d, 0x36, 0x94, 0x48, 0x11, 0x24, 0xf2, 0x3c, 0xe4, 0x35, 0xb2, 0x1f, 0xe7, 0x74,
+	0xca, 0x1a, 0x0d, 0x94, 0xf0, 0x52, 0x04, 0x77, 0x4a, 0xe2, 0x9e, 0x48, 0xc4, 0x55, 0xee, 0xc3,
+	0xbc, 0xc6, 0x9f, 0x23, 0x94, 0xf5, 0x07, 0xb8, 0x26, 0x3f, 0x30, 0x78, 0x62, 0x24, 0x5a, 0x2a,
+	0xca, 0x85, 0xd1, 0xa2, 0xa4, 0x6a, 0xef, 0xff, 0xa2, 0x2a, 0xeb, 0xf0, 0xb0, 0xc4, 0x7c, 0x8b,
+	0x7b, 0x76, 0xda, 0x89, 0x10, 0x9f, 0xe2, 0x50, 0xf0, 0x97, 0xe0, 0x91, 0x90, 0x51, 0x8a, 0xba,
+	0x0e, 0x59, 0x5f, 0x8e, 0xde, 0x73, 0x31, 0x2e, 0x60, 0x5f, 0x9e, 0x62, 0x95, 0xb2, 0xc6, 0x47,
+	0x21, 0x43, 0x22, 0x35, 0xde, 0xc5, 0x98, 0xe4, 0xdc, 0x43, 0x35, 0x8d, 0x9b, 0x0c, 0x30, 0xec,
+	0x9e, 0x02, 0x59, 0x55, 0xd1, 0xeb, 0xd2, 0x25, 0x45, 0xa2, 0x84, 0xef, 0x5f, 0xc5, 0x9e, 0x23,
+	0xa8, 0xab, 0x56, 0xd7, 0xda, 0x8a, 0x24, 0x45, 0x1e, 0x6c, 0x78, 0xdb, 0xae, 0x4a, 0x72, 0xde,
+	0x57, 0xf3, 0x8f, 0xae, 0x6d, 0xbb, 0xb6, 0xf1, 0x17, 0x83, 0x47, 0x23, 0x7a, 0x14, 0xcd, 0x15,
+	0x38, 0xda, 0xe7, 0x5e, 0xab, 0xe3, 0x6c, 0x28, 0x61, 0xaa, 0xcf, 0xc2, 0x98, 0xa8, 0x5a, 0x1d,
+	0x47, 0x19, 0xa0, 0xe8, 0x8e, 0xf4, 0x43, 0x67, 0xf8, 0x06, 0xcc, 0xd2, 0xa3, 0xd2, 0xd6, 0x54,
+	0xa0, 0x4f, 0xc5, 0x59, 0x7b, 0x4d, 0x49, 0x46, 0xcc, 0x1d, 0x6d, 0x86, 0x0f, 0xf1, 0x32, 0x1c,
+	0xf1, 0xac, 0x76, 0x7b, 0x5b, 0x5b, 0x9b, 0x96, 0xd6, 0x2a, 0x71, 0xd6, 0xae, 0xf9, 0x72, 0x11,
+	0x5b, 0x05, 0x6f, 0x70, 0x64, 0xbc, 0x47, 0xd1, 0x93, 0xd3, 0xd4, 0xbd, 0x14, 0x99, 0x1b, 0x53,
+	0x43, 0x73, 0x23, 0xd4, 0xf2, 0xeb, 0xb4, 0x97, 0x03, 0xfb, 0x94, 0xde, 0x73, 0x70, 0x98, 0xc4,
+	0x29, 0xb1, 0x4f, 0x4e, 0x48, 0x05, 0x81, 0x6b, 0x0d, 0xe3, 0xe3, 0xa8, 0xd1, 0xff, 0xff, 0x05,
+	0x7c, 0xaf, 0xd7, 0xe8, 0x80, 0x80, 0xe2, 0x7a, 0x19, 0x72, 0x44, 0xa9, 0xdf, 0x41, 0x8a, 0xc0,
+	0x02, 0x95, 0xfb, 0xf7, 0x1a, 0xce, 0xd2, 0x98, 0x95, 0xe5, 0x6f, 0xd8, 0xa2, 0xd7, 0xf6, 0x0e,
+	0xf0, 0xc3, 0xa6, 0x38, 0xaa, 0x1b, 0xd4, 0x6d, 0x46, 0xb6, 0x0f, 0x55, 0x6d, 0x7c, 0xcb, 0x29,
+	0x3d, 0xfd, 0xd6, 0xa5, 0x4e, 0xfd, 0xef, 0x02, 0xcc, 0x48, 0xcb, 0xf8, 0x35, 0x83, 0x9c, 0x1e,
+	0xe3, 0x58, 0x8d, 0x33, 0x12, 0xf7, 0x6b, 0xae, 0xf4, 0x4c, 0x0a, 0x49, 0x05, 0x6a, 0xac, 0x7c,
+	0xf2, 0xd3, 0x6f, 0x37, 0xa7, 0x4e, 0xe3, 0x49, 0x33, 0xe6, 0x77, 0x63, 0xb0, 0x30, 0xcc, 0x9d,
+	0x50, 0x2a, 0x76, 0xf1, 0x5b, 0x06, 0xf9, 0x60, 0xbb, 0x60, 0xb2, 0x37, 0xbd, 0xa9, 0x4b, 0x4b,
+	0x69, 0x44, 0x89, 0x6c, 0x55, 0x92, 0xd5, 0xf0, 0xd4, 0x44, 0xb2, 0xfa, 0x10, 0xda, 0x67, 0x21,
+	0x34, 0x91, 0x02, 0x4d, 0xa4, 0x47, 0x0b, 0xba, 0xd7, 0x38, 0x2e, 0xd1, 0x2a, 0x78, 0x6c, 0x22,
+	0x1a, 0x7e, 0xc1, 0x00, 0x06, 0xfb, 0x1b, 0x53, 0x78, 0x08, 0x12, 0x75, 0x32, 0x95, 0x2c, 0xe1,
+	0x2c, 0x4a, 0x9c, 0x05, 0x2c, 0x4f, 0xce, 0x14, 0x7e, 0xc3, 0x20, 0xeb, 0x6f, 0x16, 0x7c, 0x7a,
+	0xac, 0xf5, 0xd0, 0x1e, 0x2f, 0x1d, 0x4f, 0x90, 0x22, 0xef, 0x17, 0xa4, 0xf7, 0x73, 0x78, 0xe6,
+	0x00, 0x1d, 0x64, 0xca, 0xa5, 0x66, 0xee, 0xc8, 0xcd, 0xbf, 0x8b, 0x5f, 0x31, 0x98, 0x91, 0x4b,
+	0x12, 0x27, 0xfb, 0x0c, 0x8a, 0xb5, 0x98, 0x24, 0x46, 0x6c, 0x67, 0x24, 0xdb, 0x0a, 0x2e, 0x1f,
+	0x98, 0x0d, 0x3f, 0x67, 0x70, 0x88, 0xd6, 0xc8, 0x78, 0x6f, 0x91, 0x25, 0x5a, 0x3a, 0x91, 0x28,
+	0x47, 0x58, 0xcf, 0x4a, 0xac, 0x25, 0xac, 0xc6, 0x62, 0x49, 0x59, 0x73, 0x27, 0xb4, 0x8f, 0x77,
+	0xf1, 0x47, 0x06, 0x87, 0x69, 0x18, 0xe2, 0x78, 0x37, 0xd1, 0xed, 0x54, 0xaa, 0x26, 0x0b, 0x12,
+	0xd0, 0x65, 0x09, 0xb4, 0x86, 0xe7, 0x0f, 0x92, 0x27, 0x3d, 0x8d, 0xcd, 0x9d, 0x60, 0xa3, 0xed,
+	0xe2, 0x77, 0x0c, 0x72, 0x7a, 0xda, 0x63, 0x22, 0x80, 0x48, 0x9e, 0x58, 0xc3, 0xab, 0xc3, 0x78,
+	0x49, 0xb2, 0x3e, 0x8f, 0xab, 0xf7, 0xc2, 0x8a, 0xb7, 0x19, 0x14, 0x42, 0x83, 0x17, 0xc7, 0x3f,
+	0xb4, 0xd1, 0x95, 0x50, 0x3a, 0x95, 0x4e, 0xf8, 0xdf, 0x34, 0x9f, 0xdc, 0x00, 0x6b, 0x6b, 0x77,
+	0xf6, 0xca, 0xec, 0xee, 0x5e, 0x99, 0xfd, 0xba, 0x57, 0x66, 0x5f, 0xee, 0x97, 0x33, 0x77, 0xf7,
+	0xcb, 0x99, 0x9f, 0xf7, 0xcb, 0x99, 0x77, 0xab, 0x4e, 0xcb, 0x7b, 0xbf, 0xb7, 0x59, 0xbb, 0xce,
+	0xb7, 0xb4, 0x59, 0xf5, 0xe7, 0xb4, 0x68, 0x7e, 0x60, 0x7e, 0x28, 0x7d, 0xf8, 0x2d, 0x23, 0x36,
+	0x0f, 0xc9, 0xff, 0xf8, 0x57, 0xfe, 0x09, 0x00, 0x00, 0xff, 0xff, 0xe1, 0x88, 0x08, 0xbb, 0xa5,
+	0x10, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1118,12 +1118,12 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	// Proposal queries proposal details based on ProposalID.
 	Proposal(ctx context.Context, in *QueryProposalRequest, opts ...grpc.CallOption) (*QueryProposalResponse, error)
-	// ProposalV2 queries V2 proposal details based on ProposalID.
-	ProposalV2(ctx context.Context, in *QueryProposalV2Request, opts ...grpc.CallOption) (*QueryProposalV2Response, error)
+	// Proposal2 queries proposal2 details based on ProposalID.
+	Proposal2(ctx context.Context, in *QueryProposal2Request, opts ...grpc.CallOption) (*QueryProposal2Response, error)
 	// Proposals queries all proposals based on given status.
 	Proposals(ctx context.Context, in *QueryProposalsRequest, opts ...grpc.CallOption) (*QueryProposalsResponse, error)
-	// ProposalsV2 queries all V2 proposals based on given status.
-	ProposalsV2(ctx context.Context, in *QueryProposalsV2Request, opts ...grpc.CallOption) (*QueryProposalsV2Response, error)
+	// Proposals2 queries all 2 proposals based on given status.
+	Proposals2(ctx context.Context, in *QueryProposals2Request, opts ...grpc.CallOption) (*QueryProposals2Response, error)
 	// Vote queries voted information based on proposalID, voterAddr.
 	Vote(ctx context.Context, in *QueryVoteRequest, opts ...grpc.CallOption) (*QueryVoteResponse, error)
 	// Votes queries votes of a given proposal.
@@ -1155,9 +1155,9 @@ func (c *queryClient) Proposal(ctx context.Context, in *QueryProposalRequest, op
 	return out, nil
 }
 
-func (c *queryClient) ProposalV2(ctx context.Context, in *QueryProposalV2Request, opts ...grpc.CallOption) (*QueryProposalV2Response, error) {
-	out := new(QueryProposalV2Response)
-	err := c.cc.Invoke(ctx, "/cosmos.gov.v1beta1.Query/ProposalV2", in, out, opts...)
+func (c *queryClient) Proposal2(ctx context.Context, in *QueryProposal2Request, opts ...grpc.CallOption) (*QueryProposal2Response, error) {
+	out := new(QueryProposal2Response)
+	err := c.cc.Invoke(ctx, "/cosmos.gov.v1beta1.Query/Proposal2", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1173,9 +1173,9 @@ func (c *queryClient) Proposals(ctx context.Context, in *QueryProposalsRequest, 
 	return out, nil
 }
 
-func (c *queryClient) ProposalsV2(ctx context.Context, in *QueryProposalsV2Request, opts ...grpc.CallOption) (*QueryProposalsV2Response, error) {
-	out := new(QueryProposalsV2Response)
-	err := c.cc.Invoke(ctx, "/cosmos.gov.v1beta1.Query/ProposalsV2", in, out, opts...)
+func (c *queryClient) Proposals2(ctx context.Context, in *QueryProposals2Request, opts ...grpc.CallOption) (*QueryProposals2Response, error) {
+	out := new(QueryProposals2Response)
+	err := c.cc.Invoke(ctx, "/cosmos.gov.v1beta1.Query/Proposals2", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1240,12 +1240,12 @@ func (c *queryClient) TallyResult(ctx context.Context, in *QueryTallyResultReque
 type QueryServer interface {
 	// Proposal queries proposal details based on ProposalID.
 	Proposal(context.Context, *QueryProposalRequest) (*QueryProposalResponse, error)
-	// ProposalV2 queries V2 proposal details based on ProposalID.
-	ProposalV2(context.Context, *QueryProposalV2Request) (*QueryProposalV2Response, error)
+	// Proposal2 queries proposal2 details based on ProposalID.
+	Proposal2(context.Context, *QueryProposal2Request) (*QueryProposal2Response, error)
 	// Proposals queries all proposals based on given status.
 	Proposals(context.Context, *QueryProposalsRequest) (*QueryProposalsResponse, error)
-	// ProposalsV2 queries all V2 proposals based on given status.
-	ProposalsV2(context.Context, *QueryProposalsV2Request) (*QueryProposalsV2Response, error)
+	// Proposals2 queries all 2 proposals based on given status.
+	Proposals2(context.Context, *QueryProposals2Request) (*QueryProposals2Response, error)
 	// Vote queries voted information based on proposalID, voterAddr.
 	Vote(context.Context, *QueryVoteRequest) (*QueryVoteResponse, error)
 	// Votes queries votes of a given proposal.
@@ -1267,14 +1267,14 @@ type UnimplementedQueryServer struct {
 func (*UnimplementedQueryServer) Proposal(ctx context.Context, req *QueryProposalRequest) (*QueryProposalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Proposal not implemented")
 }
-func (*UnimplementedQueryServer) ProposalV2(ctx context.Context, req *QueryProposalV2Request) (*QueryProposalV2Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ProposalV2 not implemented")
+func (*UnimplementedQueryServer) Proposal2(ctx context.Context, req *QueryProposal2Request) (*QueryProposal2Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Proposal2 not implemented")
 }
 func (*UnimplementedQueryServer) Proposals(ctx context.Context, req *QueryProposalsRequest) (*QueryProposalsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Proposals not implemented")
 }
-func (*UnimplementedQueryServer) ProposalsV2(ctx context.Context, req *QueryProposalsV2Request) (*QueryProposalsV2Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ProposalsV2 not implemented")
+func (*UnimplementedQueryServer) Proposals2(ctx context.Context, req *QueryProposals2Request) (*QueryProposals2Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Proposals2 not implemented")
 }
 func (*UnimplementedQueryServer) Vote(ctx context.Context, req *QueryVoteRequest) (*QueryVoteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Vote not implemented")
@@ -1317,20 +1317,20 @@ func _Query_Proposal_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_ProposalV2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryProposalV2Request)
+func _Query_Proposal2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryProposal2Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).ProposalV2(ctx, in)
+		return srv.(QueryServer).Proposal2(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/cosmos.gov.v1beta1.Query/ProposalV2",
+		FullMethod: "/cosmos.gov.v1beta1.Query/Proposal2",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).ProposalV2(ctx, req.(*QueryProposalV2Request))
+		return srv.(QueryServer).Proposal2(ctx, req.(*QueryProposal2Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1353,20 +1353,20 @@ func _Query_Proposals_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_ProposalsV2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryProposalsV2Request)
+func _Query_Proposals2_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryProposals2Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).ProposalsV2(ctx, in)
+		return srv.(QueryServer).Proposals2(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/cosmos.gov.v1beta1.Query/ProposalsV2",
+		FullMethod: "/cosmos.gov.v1beta1.Query/Proposals2",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).ProposalsV2(ctx, req.(*QueryProposalsV2Request))
+		return srv.(QueryServer).Proposals2(ctx, req.(*QueryProposals2Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1488,16 +1488,16 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_Proposal_Handler,
 		},
 		{
-			MethodName: "ProposalV2",
-			Handler:    _Query_ProposalV2_Handler,
+			MethodName: "Proposal2",
+			Handler:    _Query_Proposal2_Handler,
 		},
 		{
 			MethodName: "Proposals",
 			Handler:    _Query_Proposals_Handler,
 		},
 		{
-			MethodName: "ProposalsV2",
-			Handler:    _Query_ProposalsV2_Handler,
+			MethodName: "Proposals2",
+			Handler:    _Query_Proposals2_Handler,
 		},
 		{
 			MethodName: "Vote",
@@ -1556,7 +1556,7 @@ func (m *QueryProposalRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryProposalV2Request) Marshal() (dAtA []byte, err error) {
+func (m *QueryProposal2Request) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1566,12 +1566,12 @@ func (m *QueryProposalV2Request) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryProposalV2Request) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryProposal2Request) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryProposalV2Request) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryProposal2Request) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1617,7 +1617,7 @@ func (m *QueryProposalResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryProposalV2Response) Marshal() (dAtA []byte, err error) {
+func (m *QueryProposal2Response) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1627,12 +1627,12 @@ func (m *QueryProposalV2Response) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryProposalV2Response) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryProposal2Response) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryProposalV2Response) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryProposal2Response) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1753,7 +1753,7 @@ func (m *QueryProposalsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryProposalsV2Request) Marshal() (dAtA []byte, err error) {
+func (m *QueryProposals2Request) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1763,12 +1763,12 @@ func (m *QueryProposalsV2Request) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryProposalsV2Request) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryProposals2Request) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryProposalsV2Request) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryProposals2Request) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1807,7 +1807,7 @@ func (m *QueryProposalsV2Request) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryProposalsV2Response) Marshal() (dAtA []byte, err error) {
+func (m *QueryProposals2Response) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1817,12 +1817,12 @@ func (m *QueryProposalsV2Response) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryProposalsV2Response) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryProposals2Response) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryProposalsV2Response) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryProposals2Response) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2337,7 +2337,7 @@ func (m *QueryProposalRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryProposalV2Request) Size() (n int) {
+func (m *QueryProposal2Request) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2360,7 +2360,7 @@ func (m *QueryProposalResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryProposalV2Response) Size() (n int) {
+func (m *QueryProposal2Response) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2414,7 +2414,7 @@ func (m *QueryProposalsResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryProposalsV2Request) Size() (n int) {
+func (m *QueryProposals2Request) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2438,7 +2438,7 @@ func (m *QueryProposalsV2Request) Size() (n int) {
 	return n
 }
 
-func (m *QueryProposalsV2Response) Size() (n int) {
+func (m *QueryProposals2Response) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2707,7 +2707,7 @@ func (m *QueryProposalRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryProposalV2Request) Unmarshal(dAtA []byte) error {
+func (m *QueryProposal2Request) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2730,10 +2730,10 @@ func (m *QueryProposalV2Request) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryProposalV2Request: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryProposal2Request: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryProposalV2Request: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryProposal2Request: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2859,7 +2859,7 @@ func (m *QueryProposalResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryProposalV2Response) Unmarshal(dAtA []byte) error {
+func (m *QueryProposal2Response) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2882,10 +2882,10 @@ func (m *QueryProposalV2Response) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryProposalV2Response: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryProposal2Response: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryProposalV2Response: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryProposal2Response: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -3231,7 +3231,7 @@ func (m *QueryProposalsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryProposalsV2Request) Unmarshal(dAtA []byte) error {
+func (m *QueryProposals2Request) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3254,10 +3254,10 @@ func (m *QueryProposalsV2Request) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryProposalsV2Request: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryProposals2Request: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryProposalsV2Request: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryProposals2Request: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -3400,7 +3400,7 @@ func (m *QueryProposalsV2Request) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryProposalsV2Response) Unmarshal(dAtA []byte) error {
+func (m *QueryProposals2Response) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3423,10 +3423,10 @@ func (m *QueryProposalsV2Response) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryProposalsV2Response: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryProposals2Response: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryProposalsV2Response: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryProposals2Response: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -3458,7 +3458,7 @@ func (m *QueryProposalsV2Response) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Proposals = append(m.Proposals, ProposalV2{})
+			m.Proposals = append(m.Proposals, Proposal2{})
 			if err := m.Proposals[len(m.Proposals)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}

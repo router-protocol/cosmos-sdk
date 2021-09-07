@@ -91,7 +91,7 @@ func (suite *KeeperTestSuite) TestSubmitProposal() {
 	}
 }
 
-func (suite *KeeperTestSuite) TestSubmitProposalV2() {
+func (suite *KeeperTestSuite) TestSubmitProposal2() {
 	// Proposal is for the gov module to vote on another proposal :)
 	govAccount := suite.app.GovKeeper.GetGovernanceAccount(suite.ctx)
 	voteProposal := []sdk.Msg{types.NewMsgVote(govAccount.GetAddress(), 0, types.OptionYes)}
@@ -108,7 +108,7 @@ func (suite *KeeperTestSuite) TestSubmitProposalV2() {
 	}
 
 	for i, tc := range testCases {
-		_, err := suite.app.GovKeeper.SubmitProposalV2(suite.ctx, tc.messages)
+		_, err := suite.app.GovKeeper.SubmitProposal2(suite.ctx, tc.messages)
 		suite.Require().True(errors.Is(tc.expectedErr, err), "tc #%d; got: %v, expected: %v", i, err, tc.expectedErr)
 	}
 }

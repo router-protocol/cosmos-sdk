@@ -33,12 +33,12 @@ type Keeper struct {
 	// The codec codec for binary encoding/decoding.
 	cdc codec.BinaryCodec
 
-	// Proposal router (this is used for Message based proposals - V2)
-	router *middleware.MsgServiceRouter
+	// Proposal router (this is used for Message based proposals - 2)
+	msgServiceRouter *middleware.MsgServiceRouter
 
 	// Proposal Content Handler (this is used for Content based proposals)
 	// NOTE: This is deprecated and will be removed in the next release
-	handler types.Router
+	router types.Router
 }
 
 // NewKeeper returns a governance keeper. It handles:
@@ -51,7 +51,7 @@ type Keeper struct {
 func NewKeeper(
 	cdc codec.BinaryCodec, key sdk.StoreKey, paramSpace types.ParamSubspace,
 	authKeeper types.AccountKeeper, bankKeeper types.BankKeeper, sk types.StakingKeeper,
-	handler types.Router, router *middleware.MsgServiceRouter,
+	router types.Router, msgServiceRouter *middleware.MsgServiceRouter,
 ) Keeper {
 
 	// ensure governance module account is set
@@ -59,15 +59,20 @@ func NewKeeper(
 		panic(fmt.Sprintf("%s module account has not been set", types.ModuleName))
 	}
 
+	// It is vital to seal the governance proposal router here as to not allow
+	// further handlers to be registered after the keeper is created since this
+	// could create invalid or non-deterministic behavior.
+	router.Seal()
+
 	return Keeper{
-		storeKey:   key,
-		paramSpace: paramSpace,
-		authKeeper: authKeeper,
-		bankKeeper: bankKeeper,
-		sk:         sk,
-		cdc:        cdc,
-		handler:    handler,
-		router:     router,
+		storeKey:         key,
+		paramSpace:       paramSpace,
+		authKeeper:       authKeeper,
+		bankKeeper:       bankKeeper,
+		sk:               sk,
+		cdc:              cdc,
+		router:           router,
+		msgServiceRouter: msgServiceRouter,
 	}
 }
 
@@ -87,14 +92,14 @@ func (keeper Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", "x/"+types.ModuleName)
 }
 
-// Router return the gov Keeper's router (for message-based proposal)
-func (keeper Keeper) Router() *middleware.MsgServiceRouter {
+// Router return the gov Keeper's router (for content-based proposal)
+func (keeper Keeper) Router() types.Router {
 	return keeper.router
 }
 
-// Handler returns the gov Keeper's handler (for content-based proposal)
-func (keeper Keeper) Handler() types.Router {
-	return keeper.handler
+// Handler returns the gov Keeper's handler (for message-based proposal)
+func (keeper Keeper) MsgServiceRouter() *middleware.MsgServiceRouter {
+	return keeper.msgServiceRouter
 }
 
 // GetGovernanceAccount returns the governance ModuleAccount
@@ -151,15 +156,15 @@ func (keeper Keeper) IterateActiveProposalsQueue(ctx sdk.Context, endTime time.T
 	}
 }
 
-// IterateActiveProposalsQueueV2 iterates over the V2 proposals in the active proposal queue
+// IterateActiveProposalsQueue2 iterates over the 2 proposals in the active proposal queue
 // and performs a callback function
-func (keeper Keeper) IterateActiveProposalsQueueV2(ctx sdk.Context, endTime time.Time, cb func(proposal types.ProposalV2) (stop bool)) {
+func (keeper Keeper) IterateActiveProposalsQueue2(ctx sdk.Context, endTime time.Time, cb func(proposal types.Proposal2) (stop bool)) {
 	iterator := keeper.ActiveProposalQueueIterator(ctx, endTime)
 
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		proposalID, _ := types.SplitActiveProposalQueueKey(iterator.Key())
-		proposal, found := keeper.GetProposalV2(ctx, proposalID)
+		proposal, found := keeper.GetProposal2(ctx, proposalID)
 		if !found {
 			panic(fmt.Sprintf("proposal %d does not exist", proposalID))
 		}
@@ -191,13 +196,13 @@ func (keeper Keeper) IterateInactiveProposalsQueue(ctx sdk.Context, endTime time
 
 // IterateInactiveProposalsQueue iterates over the proposals in the inactive proposal queue
 // and performs a callback function
-func (keeper Keeper) IterateInactiveProposalsQueueV2(ctx sdk.Context, endTime time.Time, cb func(proposal types.ProposalV2) (stop bool)) {
+func (keeper Keeper) IterateInactiveProposalsQueue2(ctx sdk.Context, endTime time.Time, cb func(proposal types.Proposal2) (stop bool)) {
 	iterator := keeper.InactiveProposalQueueIterator(ctx, endTime)
 
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		proposalID, _ := types.SplitInactiveProposalQueueKey(iterator.Key())
-		proposal, found := keeper.GetProposalV2(ctx, proposalID)
+		proposal, found := keeper.GetProposal2(ctx, proposalID)
 		if !found {
 			panic(fmt.Sprintf("proposal %d does not exist", proposalID))
 		}

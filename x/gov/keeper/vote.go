@@ -41,9 +41,9 @@ func (keeper Keeper) AddVote(ctx sdk.Context, proposalID uint64, voterAddr sdk.A
 	return nil
 }
 
-// AddVoteV2 adds a vote on a specific V2 proposal
-func (keeper Keeper) AddVoteV2(ctx sdk.Context, proposalID uint64, voterAddr sdk.AccAddress, options types.WeightedVoteOptions) error {
-	proposal, ok := keeper.GetProposalV2(ctx, proposalID)
+// AddVote2 adds a vote on a specific 2 proposal
+func (keeper Keeper) AddVote2(ctx sdk.Context, proposalID uint64, voterAddr sdk.AccAddress, options types.WeightedVoteOptions) error {
+	proposal, ok := keeper.GetProposal2(ctx, proposalID)
 	if !ok {
 		return sdkerrors.Wrapf(types.ErrUnknownProposal, "%d", proposalID)
 	}

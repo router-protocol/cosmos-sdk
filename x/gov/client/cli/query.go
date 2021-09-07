@@ -75,10 +75,10 @@ $ %s query gov proposal 1
 			// Query the proposal
 			res, err := queryClient.Proposal(cmd.Context(), &types.QueryProposalRequest{ProposalId: proposalID})
 			if err != nil {
-				// Check if the proposal is V2
+				// Check if the proposal is 2
 				if errors.Is(err, types.ErrUnknownProposal) {
-					res2, err := queryClient.ProposalV2(cmd.Context(),
-						&types.QueryProposalV2Request{ProposalId: proposalID})
+					res2, err := queryClient.Proposal2(cmd.Context(),
+						&types.QueryProposal2Request{ProposalId: proposalID})
 					if err != nil {
 						return err
 					}

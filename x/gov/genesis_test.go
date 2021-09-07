@@ -153,7 +153,6 @@ func TestEqualProposals(t *testing.T) {
 
 	// They are similar but their IDs should be different
 	require.NotEqual(t, proposal1, proposal2)
-	require.NotEqual(t, proposal1, proposal2)
 
 	// Now create two genesis blocks
 	state1 := types.GenesisState{Proposals: []types.Proposal{proposal1}}
@@ -165,7 +164,6 @@ func TestEqualProposals(t *testing.T) {
 	proposal1.ProposalId = 55
 	proposal2.ProposalId = 55
 	require.Equal(t, proposal1, proposal1)
-	require.Equal(t, proposal1, proposal2)
 
 	// Reassign proposals into state
 	state1.Proposals[0] = proposal1
@@ -176,7 +174,7 @@ func TestEqualProposals(t *testing.T) {
 	require.True(t, state1.Equal(state2))
 }
 
-func TestEqualProposalsV2(t *testing.T) {
+func TestEqualProposals2(t *testing.T) {
 	app := simapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 	addrs := simapp.AddTestAddrs(app, ctx, 2, valTokens)
@@ -190,19 +188,18 @@ func TestEqualProposalsV2(t *testing.T) {
 	govAccount := app.GovKeeper.GetGovernanceAccount(ctx)
 	// Proposal is for the gov module to vote on another proposal :)
 	proposalMsgs := []sdk.Msg{types.NewMsgVote(govAccount.GetAddress(), 0, types.OptionYes)}
-	proposal1, err := app.GovKeeper.SubmitProposalV2(ctx, proposalMsgs)
+	proposal1, err := app.GovKeeper.SubmitProposal2(ctx, proposalMsgs)
 	require.NoError(t, err)
 
-	proposal2, err := app.GovKeeper.SubmitProposalV2(ctx, proposalMsgs)
+	proposal2, err := app.GovKeeper.SubmitProposal2(ctx, proposalMsgs)
 	require.NoError(t, err)
 
 	// They are similar but their IDs should be different
 	require.NotEqual(t, proposal1, proposal2)
-	require.NotEqual(t, proposal1, proposal2)
 
 	// Now create two genesis blocks
-	state1 := types.GenesisState{ProposalsV2: []types.ProposalV2{proposal1}}
-	state2 := types.GenesisState{ProposalsV2: []types.ProposalV2{proposal2}}
+	state1 := types.GenesisState{Proposals_2: []types.Proposal2{proposal1}}
+	state2 := types.GenesisState{Proposals_2: []types.Proposal2{proposal2}}
 	require.NotEqual(t, state1, state2)
 	require.False(t, state1.Equal(state2))
 
@@ -210,11 +207,10 @@ func TestEqualProposalsV2(t *testing.T) {
 	proposal1.ProposalId = 55
 	proposal2.ProposalId = 55
 	require.Equal(t, proposal1, proposal1)
-	require.Equal(t, proposal1, proposal2)
 
 	// Reassign proposals into state
-	state1.ProposalsV2[0] = proposal1
-	state2.ProposalsV2[0] = proposal2
+	state1.Proposals_2[0] = proposal1
+	state2.Proposals_2[0] = proposal2
 
 	// State should be identical now..
 	require.Equal(t, state1, state2)

@@ -87,7 +87,7 @@ message Proposal {
 }
 
 // Proposal2 defines the core field members of a governance proposal.
-message ProposalV2 {
+message Proposal2 {
   option (gogoproto.equal) = true;
 
   uint64 proposal_id = 1 [(gogoproto.jsontag) = "id", (gogoproto.moretags) = "yaml:\"id\""];
