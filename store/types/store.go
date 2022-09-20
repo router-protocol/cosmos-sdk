@@ -190,6 +190,9 @@ type CommitMultiStore interface {
 
 	// SetIAVLCacheSize sets the cache size of the IAVL tree.
 	SetIAVLCacheSize(size int)
+
+	// SetIAVLDisableFastNode enables/disables fastnode feature on iavl.
+	SetIAVLDisableFastNode(disable bool)
 }
 
 //---------subsp-------------------------------
