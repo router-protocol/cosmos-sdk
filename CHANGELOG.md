@@ -37,6 +37,8 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 ## [Unreleased]
 
+* (x/gov) [#16331](https://github.com/cosmos/cosmos-sdk/pull/16331) Revert a change that breaks result hash.
+
 ## [v0.46.12](https://github.com/cosmos/cosmos-sdk/releases/tag/v0.46.12) - 2022-04-04
 
 ### Features
