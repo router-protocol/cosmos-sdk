@@ -12,6 +12,24 @@ This document describes how to upgrade your application. If you are looking spec
 This section is currently incomplete. Track the progress of this document [here](https://github.com/cosmos/cosmos-sdk/issues/11504).
 :::
 
+## Set PreBlocker
+
+:::tip
+Users using `depinject` / app v2 do not need any changes, this is abstracted for them.
+:::
+
+Call `SetPreBlocker` to run `PreBlock`:
+
+```go
+app.SetPreBlocker(app.PreBlocker)
+```
+
+```go
+func (app *SimApp) PreBlocker(ctx sdk.Context, req abci.RequestBeginBlock) (sdk.ResponsePreBlock, error) {
+	return app.ModuleManager.PreBlock(ctx, req)
+}
+```
+
 ## Pre-Upgrade Handling
 
 Cosmovisor supports custom pre-upgrade handling. Use pre-upgrade handling when you need to implement application config changes that are required in the newer version before you perform the upgrade.

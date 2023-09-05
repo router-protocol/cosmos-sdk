@@ -193,6 +193,11 @@ type HasConsensusVersion interface {
 	ConsensusVersion() uint64
 }
 
+type PreBlockAppModule interface {
+	AppModule
+	PreBlock(sdk.Context, abci.RequestBeginBlock) (sdk.ResponsePreBlock, error)
+}
+
 // BeginBlockAppModule is an extension interface that contains information about the AppModule and BeginBlock.
 type BeginBlockAppModule interface {
 	AppModule
@@ -249,6 +254,7 @@ type Manager struct {
 	Modules            map[string]interface{} // interface{} is used now to support the legacy AppModule as well as new core appmodule.AppModule.
 	OrderInitGenesis   []string
 	OrderExportGenesis []string
+	OrderPreBlockers   []string
 	OrderBeginBlockers []string
 	OrderEndBlockers   []string
 	OrderMigrations    []string
@@ -258,15 +264,20 @@ type Manager struct {
 func NewManager(modules ...AppModule) *Manager {
 	moduleMap := make(map[string]interface{})
 	modulesStr := make([]string, 0, len(modules))
+	preBlockModulesStr := make([]string, 0)
 	for _, module := range modules {
 		moduleMap[module.Name()] = module
 		modulesStr = append(modulesStr, module.Name())
+		if _, ok := module.(PreBlockAppModule); ok {
+			preBlockModulesStr = append(preBlockModulesStr, module.Name())
+		}
 	}
 
 	return &Manager{
 		Modules:            moduleMap,
 		OrderInitGenesis:   modulesStr,
 		OrderExportGenesis: modulesStr,
+		OrderPreBlockers:   preBlockModulesStr,
 		OrderBeginBlockers: modulesStr,
 		OrderEndBlockers:   modulesStr,
 	}
@@ -277,15 +288,20 @@ func NewManager(modules ...AppModule) *Manager {
 func NewManagerFromMap(moduleMap map[string]appmodule.AppModule) *Manager {
 	simpleModuleMap := make(map[string]interface{})
 	modulesStr := make([]string, 0, len(simpleModuleMap))
+	preBlockModulesStr := make([]string, 0)
 	for name, module := range moduleMap {
 		simpleModuleMap[name] = module
 		modulesStr = append(modulesStr, name)
+		if _, ok := module.(PreBlockAppModule); ok {
+			preBlockModulesStr = append(preBlockModulesStr, name)
+		}
 	}
 
 	return &Manager{
 		Modules:            simpleModuleMap,
 		OrderInitGenesis:   modulesStr,
 		OrderExportGenesis: modulesStr,
+		OrderPreBlockers:   preBlockModulesStr,
 		OrderBeginBlockers: modulesStr,
 		OrderEndBlockers:   modulesStr,
 	}
@@ -301,6 +317,12 @@ func (m *Manager) SetOrderInitGenesis(moduleNames ...string) {
 func (m *Manager) SetOrderExportGenesis(moduleNames ...string) {
 	m.assertNoForgottenModules("SetOrderExportGenesis", moduleNames)
 	m.OrderExportGenesis = moduleNames
+}
+
+// SetOrderPreBlockers sets the order of set pre-blocker calls
+func (m *Manager) SetOrderPreBlockers(moduleNames ...string) {
+	m.assertNoForgottenPreBlockModules("SetOrderPreBlockers", moduleNames)
+	m.OrderPreBlockers = moduleNames
 }
 
 // SetOrderBeginBlockers sets the order of set begin-blocker calls
@@ -443,6 +465,28 @@ func (m *Manager) assertNoForgottenModules(setOrderFnName string, moduleNames []
 	}
 }
 
+// assertNoForgottenPreBlockModules checks that we didn't forget any preblock modules in the
+// SetOrder* functions.
+func (m *Manager) assertNoForgottenPreBlockModules(setOrderFnName string, moduleNames []string) {
+	ms := make(map[string]bool)
+	for _, m := range moduleNames {
+		ms[m] = true
+	}
+	var missing []string
+	for m, module := range m.Modules {
+		if _, ok := module.(PreBlockAppModule); ok {
+			if !ms[m] {
+				missing = append(missing, m)
+			}
+		}
+	}
+	if len(missing) != 0 {
+		sort.Strings(missing)
+		panic(fmt.Sprintf(
+			"%s: all preblock modules must be defined when setting %s, missing: %v", setOrderFnName, setOrderFnName, missing))
+	}
+}
+
 // MigrationHandler is the migration function that each module registers.
 type MigrationHandler func(sdk.Context) error
 
@@ -550,19 +594,38 @@ func (m Manager) RunMigrations(ctx sdk.Context, cfg Configurator, fromVM Version
 	return updatedVM, nil
 }
 
+// PreBlock performs begin block functionality for upgrade module.
+// It takes the current context as a parameter and returns a boolean value
+// indicating whether the migration was successfully executed or not.
+func (m *Manager) PreBlock(ctx sdk.Context, req abci.RequestBeginBlock) (sdk.ResponsePreBlock, error) {
+	ctx = ctx.WithEventManager(sdk.NewEventManager())
+	paramsChanged := false
+	for _, moduleName := range m.OrderPreBlockers {
+		if module, ok := m.Modules[moduleName].(PreBlockAppModule); ok {
+			rsp, err := module.PreBlock(ctx, req)
+			if err != nil {
+				return sdk.ResponsePreBlock{}, err
+			}
+			if rsp.ConsensusParamsChanged {
+				paramsChanged = true
+			}
+		}
+	}
+	return sdk.ResponsePreBlock{
+		ConsensusParamsChanged: paramsChanged,
+	}, nil
+}
+
 // BeginBlock performs begin block functionality for all modules. It creates a
 // child context with an event manager to aggregate events emitted from all
 // modules.
 func (m *Manager) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	ctx = ctx.WithEventManager(sdk.NewEventManager())
-
 	for _, moduleName := range m.OrderBeginBlockers {
-		module, ok := m.Modules[moduleName].(BeginBlockAppModule)
-		if ok {
+		if module, ok := m.Modules[moduleName].(BeginBlockAppModule); ok {
 			module.BeginBlock(ctx, req)
 		}
 	}
-
 	return abci.ResponseBeginBlock{
 		Events: ctx.EventManager().ABCIEvents(),
 	}

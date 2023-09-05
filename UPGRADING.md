@@ -4,6 +4,23 @@ This guide provides instructions for upgrading to specific versions of Cosmos SD
 
 ## [v0.47.x](https://github.com/cosmos/cosmos-sdk/releases/tag/v0.47.0)
 
+### BaseApp
+
+#### Set PreBlocker
+
+**Users using `depinject` / app v2 do not need any changes, this is abstracted for them.**
+
+```diff
++ app.SetPreBlocker(app.PreBlocker)
+```
+```diff
++func (app *SimApp) PreBlocker(ctx sdk.Context, req abci.RequestBeginBlock) (sdk.ResponsePreBlock, error) {
++	return app.ModuleManager.PreBlock(ctx, req)
++}
+```
+
+BaseApp added `SetPreBlocker` for apps. This is essential for BaseApp to run `PreBlock` which runs before begin blocker other modules, and allows to modify consensus parameters, and the changes are visible to the following state machine logics.
+
 ### Migration to CometBFT (Part 1)
 
 The Cosmos SDK has migrated to CometBFT, as its default consensus engine.
