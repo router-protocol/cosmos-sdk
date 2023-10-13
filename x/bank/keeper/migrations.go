@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/exported"
 	v2 "github.com/cosmos/cosmos-sdk/x/bank/migrations/v2"
@@ -14,7 +13,6 @@ import (
 type Migrator struct {
 	keeper         BaseKeeper
 	legacySubspace exported.Subspace
-	legacyAmino    *codec.LegacyAmino
 }
 
 // NewMigrator returns a new Migrator.
@@ -35,10 +33,7 @@ func (m Migrator) Migrate2to3(ctx sdk.Context) error {
 // Migrate3to4 migrates x/bank storage from version 3 to 4.
 func (m Migrator) Migrate3to4(ctx sdk.Context) error {
 	var sendEnabled []*types.SendEnabled
-	bz := m.legacySubspace.GetRaw(ctx, types.KeySendEnabled)
-	if err := m.legacyAmino.UnmarshalJSON(bz, &sendEnabled); err != nil {
-		return err
-	}
+	m.legacySubspace.Get(ctx, types.KeySendEnabled, &sendEnabled)
 	m.keeper.SetAllSendEnabled(ctx, sendEnabled)
 	return v4.MigrateStore(ctx, m.keeper.storeKey, m.legacySubspace, m.keeper.cdc)
 }
