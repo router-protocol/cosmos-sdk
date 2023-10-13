@@ -6,6 +6,7 @@ import (
 	v2 "github.com/cosmos/cosmos-sdk/x/bank/migrations/v2"
 	v3 "github.com/cosmos/cosmos-sdk/x/bank/migrations/v3"
 	v4 "github.com/cosmos/cosmos-sdk/x/bank/migrations/v4"
+	"github.com/cosmos/cosmos-sdk/x/bank/types"
 )
 
 // Migrator is a struct for handling in-place store migrations.
@@ -31,5 +32,10 @@ func (m Migrator) Migrate2to3(ctx sdk.Context) error {
 
 // Migrate3to4 migrates x/bank storage from version 3 to 4.
 func (m Migrator) Migrate3to4(ctx sdk.Context) error {
-	return v4.MigrateStore(ctx, m.keeper.storeKey, m.legacySubspace, m.keeper.cdc)
+	var oldParams types.Params
+	m.legacySubspace.GetParamSet(ctx, &oldParams)
+	m.keeper.SetAllSendEnabled(ctx, oldParams.GetSendEnabled())
+	currParams := types.NewParams(oldParams.DefaultSendEnabled)
+	m.keeper.SetParams(ctx, currParams)
+	return v4.MigrateStore(ctx, m.keeper.storeKey, currParams, m.keeper.cdc)
 }

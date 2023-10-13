@@ -40,6 +40,7 @@ Ref: https://keepachangelog.com/en/1.0.0/
 ### Improvements
 
 * (x/gov) [#17780](https://github.com/cosmos/cosmos-sdk/pull/17780) Recover panics and turn them into errors when executing x/gov proposals.
+* (x/bank) [#](https://github.com/crypto-org-chain/cosmos-sdk/pull/) Add miss keypair of SendEnabled to restore legacy param set before migration.
 
 ### Bug Fixes
 
