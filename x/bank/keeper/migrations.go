@@ -32,10 +32,8 @@ func (m Migrator) Migrate2to3(ctx sdk.Context) error {
 
 // Migrate3to4 migrates x/bank storage from version 3 to 4.
 func (m Migrator) Migrate3to4(ctx sdk.Context) error {
-	var oldParams types.Params
-	m.legacySubspace.GetParamSet(ctx, &oldParams)
-	m.keeper.SetAllSendEnabled(ctx, oldParams.GetSendEnabled())
-	currParams := types.NewParams(oldParams.DefaultSendEnabled)
-	m.keeper.SetParams(ctx, currParams)
-	return v4.MigrateStore(ctx, m.keeper.storeKey, currParams, m.keeper.cdc)
+	var sendEnabled []*types.SendEnabled
+	m.legacySubspace.Get(ctx, types.KeySendEnabled, &sendEnabled)
+	m.keeper.SetAllSendEnabled(ctx, sendEnabled)
+	return v4.MigrateStore(ctx, m.keeper.storeKey, m.legacySubspace, m.keeper.cdc)
 }
