@@ -40,7 +40,6 @@ Ref: https://keepachangelog.com/en/1.0.0/
 ### Improvements
 
 * (x/gov) [#17780](https://github.com/cosmos/cosmos-sdk/pull/17780) Recover panics and turn them into errors when executing x/gov proposals.
-* (x/bank) [#194](https://github.com/crypto-org-chain/cosmos-sdk/pull/194) Add miss keypair of SendEnabled to restore legacy param set before migration.
 
 ### Bug Fixes
 
@@ -48,6 +47,7 @@ Ref: https://keepachangelog.com/en/1.0.0/
 * (config) [#17649](https://github.com/cosmos/cosmos-sdk/pull/17649) Fix `mempool.max-txs` configuration is invalid in `app.config`.
 * (mempool) [#17668](https://github.com/cosmos/cosmos-sdk/pull/17668) Fix `PriorityNonceIterator.Next()` nil pointer ref for min priority at the end of iteration.
 * (x/auth) [#17902](https://github.com/cosmos/cosmos-sdk/pull/17902) Remove tip posthandler.
+* (x/bank) [#194](https://github.com/crypto-org-chain/cosmos-sdk/pull/194) Add miss keypair of SendEnabled to restore legacy param set before migration.
 
 ### Client Breaking Changes
 
