@@ -1,8 +1,6 @@
 package keeper
 
 import (
-	"fmt"
-
 	"cosmossdk.io/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -126,10 +124,13 @@ func (k Keeper) CalculateDelegationRewards(ctx sdk.Context, val stakingtypes.Val
 		if stake.LTE(currentStake.Add(marginOfErr)) {
 			stake = currentStake
 		} else {
-			panic(fmt.Sprintf("calculated final stake for delegator %s greater than current stake"+
-				"\n\tfinal stake:\t%s"+
-				"\n\tcurrent stake:\t%s",
-				del.GetDelegatorAddr(), stake, currentStake))
+			// This is to fix existing delegation whose slash event is not stored as hooks were not set properly
+			// TODO: Undo this change as soon as delegators withdraw their rewards.
+			stake = currentStake
+			// panic(fmt.Sprintf("calculated final stake for delegator %s greater than current stake"+
+			// 	"\n\tfinal stake:\t%s"+
+			// 	"\n\tcurrent stake:\t%s",
+			// 	del.GetDelegatorAddr(), stake, currentStake))
 		}
 	}
 
